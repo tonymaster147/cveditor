@@ -1,0 +1,27 @@
+import ModernTemplate from "./ModernTemplate";
+import StylishTemplate from "./StylishTemplate";
+import DoubleColumnTemplate from "./DoubleColumnTemplate";
+import ClassicTemplate from "./ClassicTemplate";
+import MinimalTemplate from "./MinimalTemplate";
+import CreativeSplitTemplate from "./CreativeSplitTemplate";
+import ExecutiveTemplate from "./ExecutiveTemplate";
+import BoldHeaderTemplate from "./BoldHeaderTemplate";
+import TimelineTemplate from "./TimelineTemplate";
+import ElegantTemplate from "./ElegantTemplate";
+import PhotoSidebarTemplate from "./PhotoSidebarTemplate";
+import PhotoHeaderTemplate from "./PhotoHeaderTemplate";
+
+export const TEMPLATES = [
+  { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
+  { id: "photo-header", name: "Photo Header", tagline: "Photo next to name in the header.", defaultAccent: "#3b82f6", component: PhotoHeaderTemplate, hasPhoto: true },
+  { id: "modern", name: "Modern", tagline: "Dark sidebar with accent highlights.", defaultAccent: "#10b981", component: ModernTemplate },
+  { id: "stylish", name: "Stylish", tagline: "Clean header with two-column body.", defaultAccent: "#06b6d4", component: StylishTemplate },
+  { id: "double", name: "Double Column", tagline: "Balanced main + side layout.", defaultAccent: "#3b82f6", component: DoubleColumnTemplate },
+  { id: "classic", name: "Classic", tagline: "Traditional serif, recruiter-friendly.", defaultAccent: "#111827", component: ClassicTemplate },
+  { id: "minimal", name: "Minimal", tagline: "Lots of whitespace, light typography.", defaultAccent: "#6366f1", component: MinimalTemplate },
+  { id: "creative", name: "Creative Split", tagline: "Bold colored sidebar.", defaultAccent: "#ec4899", component: CreativeSplitTemplate },
+  { id: "executive", name: "Executive Suite", tagline: "Dark commanding header.", defaultAccent: "#f59e0b", component: ExecutiveTemplate },
+  { id: "bold", name: "Bold Header", tagline: "Full-width colored masthead.", defaultAccent: "#ef4444", component: BoldHeaderTemplate },
+  { id: "timeline", name: "Timeline", tagline: "Visual experience timeline.", defaultAccent: "#8b5cf6", component: TimelineTemplate },
+  { id: "elegant", name: "Elegant", tagline: "Centered serif, refined and formal.", defaultAccent: "#0ea5e9", component: ElegantTemplate },
+];

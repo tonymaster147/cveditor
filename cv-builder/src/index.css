@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* Editable text affordance */
+[contenteditable="true"]:hover {
+  outline: 1px dashed rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+[contenteditable="true"]:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 2px;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+/* CV page sizing — A4 at 96dpi */
+.cv-page {
+  width: 794px;
+  min-height: 1123px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  margin: 24px auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Inside a thumbnail, remove page margin/shadow so it sits flush in the scaled box */
+.thumb .cv-page {
+  margin: 0;
+  box-shadow: none;
+}
+
+/* Hide editing affordances during PDF export */
+.exporting [contenteditable="true"]:hover,
+.exporting [contenteditable="true"]:focus {
+  outline: none !important;
+  background: transparent !important;
+}
+.exporting .no-export {
+  display: none !important;
+}
