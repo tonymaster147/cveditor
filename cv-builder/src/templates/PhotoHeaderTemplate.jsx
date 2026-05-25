@@ -54,20 +54,22 @@ export default function PhotoHeaderTemplate({ data, update, accent }) {
           </Sec>
 
           <Sec title="Skills" accent={accent}>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="text-[11px] text-gray-800 leading-relaxed">
               {data.skills.map((s, i) => (
-                <Editable
-                  key={i}
-                  as="span"
-                  value={s}
-                  onChange={(v) => {
-                    const next = data.skills.slice();
-                    next[i] = v;
-                    update(["skills"], next);
-                  }}
-                  className="px-2 py-0.5 rounded-full text-[10px] text-white"
-                  style={{ background: accent }}
-                />
+                <span key={i}>
+                  <Editable
+                    as="span"
+                    value={s}
+                    onChange={(v) => {
+                      const next = data.skills.slice();
+                      next[i] = v;
+                      update(["skills"], next);
+                    }}
+                  />
+                  {i < data.skills.length - 1 && (
+                    <span className="mx-2 text-gray-400">•</span>
+                  )}
+                </span>
               ))}
             </div>
           </Sec>

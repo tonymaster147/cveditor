@@ -1,7 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import { initialData } from "../data/initialData";
 import { setPath } from "../templates/helpers";
 import { TEMPLATES } from "../templates/registry";
@@ -22,9 +20,8 @@ export default function Editor() {
 
   const [data, setData] = useState(initialData);
   const [accent, setAccent] = useState(currentTemplate?.defaultAccent || "#10b981");
-  const [exporting, setExporting] = useState(false);
+  const [format, setFormat] = useState("pdf");
   const [scale, setScale] = useState(1);
-  const pageRef = useRef(null);
 
   useEffect(() => {
     const PAGE_W = 794;
@@ -46,41 +43,19 @@ export default function Editor() {
 
   const update = (path, value) => setData((d) => setPath(d, path, value));
 
-  const handleExport = async () => {
-    if (!pageRef.current) return;
-    setExporting(true);
-    await new Promise((r) => setTimeout(r, 50));
+  const handleDownload = () => {
+    // Stash the editor state so the post-payment Thank You page can re-render
+    // the CV and generate the file in the chosen format.
     try {
-      const node = pageRef.current.querySelector(".cv-page");
-      const canvas = await html2canvas(node, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-      });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
-      const pageW = pdf.internal.pageSize.getWidth();
-      const pageH = pdf.internal.pageSize.getHeight();
-      const imgW = pageW;
-      const imgH = (canvas.height * imgW) / canvas.width;
-
-      const EPS = 1;
-      if (imgH <= pageH + EPS) {
-        pdf.addImage(imgData, "PNG", 0, 0, imgW, imgH);
-      } else {
-        let position = 0;
-        let remaining = imgH;
-        while (remaining > EPS) {
-          pdf.addImage(imgData, "PNG", 0, position, imgW, imgH);
-          remaining -= pageH;
-          position -= pageH;
-          if (remaining > EPS) pdf.addPage();
-        }
-      }
-      pdf.save(`${(data.name || "resume").replace(/\s+/g, "_")}.pdf`);
-    } finally {
-      setExporting(false);
+      sessionStorage.setItem("cv_state_data", JSON.stringify(data));
+      sessionStorage.setItem("cv_state_accent", accent);
+      sessionStorage.setItem("cv_state_format", format);
+      sessionStorage.removeItem("cv_paid_template");
+      sessionStorage.removeItem("cv_paid_payment_id");
+    } catch {
+      // sessionStorage full / disabled — proceed anyway; ThankYou will fall back to initialData.
     }
+    navigate(`/checkout/${templateId}`);
   };
 
   if (!currentTemplate) return null;
@@ -135,26 +110,31 @@ export default function Editor() {
               ))}
             </div>
 
-            {/* TEMP: Download PDF button redirects to live chat instead of generating PDF.
-                See .claude/README.md for context. Restore handleExport onClick to revert. */}
-            <a
-              href="https://direct.lc.chat/3946801/22"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-1.5 rounded bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold inline-block"
-            >
-              ⬇ Download PDF
-            </a>
+            <div className="flex items-center gap-1">
+              <select
+                value={format}
+                onChange={(e) => setFormat(e.target.value)}
+                className="text-xs border rounded px-2 py-1.5 bg-white"
+                title="Download format"
+              >
+                <option value="pdf">PDF</option>
+                <option value="docx">DOCX</option>
+              </select>
+              <button
+                onClick={handleDownload}
+                className="px-4 py-1.5 rounded bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold"
+              >
+                ⬇ Download {format.toUpperCase()}
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       <main className="flex-1 py-6 overflow-x-hidden">
-        <div ref={pageRef} className={exporting ? "exporting" : ""}>
-          <div className="cv-page-scaler-outer" style={{ "--cv-scale": scale }}>
-            <div className="cv-page-scaler" style={{ "--cv-scale": scale }}>
-              <Template data={data} update={update} accent={accent} />
-            </div>
+        <div className="cv-page-scaler-outer" style={{ "--cv-scale": scale }}>
+          <div className="cv-page-scaler" style={{ "--cv-scale": scale }}>
+            <Template data={data} update={update} accent={accent} />
           </div>
         </div>
       </main>
@@ -162,6 +142,7 @@ export default function Editor() {
       <footer className="text-center text-xs text-gray-500 py-3">
         © Copyright 2026 iCover
       </footer>
+
     </div>
   );
 }
