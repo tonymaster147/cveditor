@@ -36,6 +36,36 @@ html, body, #root {
   overflow: hidden;
 }
 
+/* Mobile: scale the fixed-width A4 page down to fit the viewport.
+   Uses a wrapper so layout height collapses with the scaled visual size.
+   PDF export is unaffected because html2canvas reads the un-scaled node size. */
+.cv-page-scaler {
+  width: 794px;
+  margin: 0 auto;
+  transform-origin: top left;
+}
+@media (max-width: 820px) {
+  .cv-page-scaler {
+    transform: scale(var(--cv-scale, 1));
+    margin: 0;
+    height: calc(1171px * var(--cv-scale, 1)); /* 1123 page + 48 margins */
+  }
+  .cv-page-scaler-outer {
+    width: calc(794px * var(--cv-scale, 1));
+    margin: 0 auto;
+    overflow: hidden;
+  }
+}
+.exporting .cv-page-scaler {
+  transform: none !important;
+  height: auto !important;
+  margin: 0 auto !important;
+}
+.exporting .cv-page-scaler-outer {
+  width: auto !important;
+  overflow: visible !important;
+}
+
 /* Inside a thumbnail, remove page margin/shadow so it sits flush in the scaled box */
 .thumb .cv-page {
   margin: 0;

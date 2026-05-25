@@ -23,7 +23,21 @@ export default function Editor() {
   const [data, setData] = useState(initialData);
   const [accent, setAccent] = useState(currentTemplate?.defaultAccent || "#10b981");
   const [exporting, setExporting] = useState(false);
+  const [scale, setScale] = useState(1);
   const pageRef = useRef(null);
+
+  useEffect(() => {
+    const PAGE_W = 794;
+    const recompute = () => {
+      const vw = window.innerWidth;
+      if (vw >= 820) { setScale(1); return; }
+      const padding = 16; // px breathing room on each side
+      setScale(Math.min(1, (vw - padding * 2) / PAGE_W));
+    };
+    recompute();
+    window.addEventListener("resize", recompute);
+    return () => window.removeEventListener("resize", recompute);
+  }, []);
 
   // When template changes via URL, reset accent to its default
   useEffect(() => {
@@ -76,7 +90,7 @@ export default function Editor() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-white border-b shadow-sm sticky top-0 z-10">
-        <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center">
               <img src={logoUrl} alt="iCover" className="h-8 w-auto" />
@@ -132,9 +146,13 @@ export default function Editor() {
         </div>
       </header>
 
-      <main className="flex-1 py-6">
+      <main className="flex-1 py-6 overflow-x-hidden">
         <div ref={pageRef} className={exporting ? "exporting" : ""}>
-          <Template data={data} update={update} accent={accent} />
+          <div className="cv-page-scaler-outer" style={{ "--cv-scale": scale }}>
+            <div className="cv-page-scaler" style={{ "--cv-scale": scale }}>
+              <Template data={data} update={update} accent={accent} />
+            </div>
+          </div>
         </div>
       </main>
 
