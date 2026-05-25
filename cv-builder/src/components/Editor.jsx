@@ -135,13 +135,16 @@ export default function Editor() {
               ))}
             </div>
 
-            <button
-              onClick={handleExport}
-              disabled={exporting}
-              className="px-4 py-1.5 rounded bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold disabled:opacity-50"
+            {/* TEMP: Download PDF button redirects to live chat instead of generating PDF.
+                See .claude/README.md for context. Restore handleExport onClick to revert. */}
+            <a
+              href="https://direct.lc.chat/3946801/22"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-1.5 rounded bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold inline-block"
             >
-              {exporting ? "Generating…" : "⬇ Download PDF"}
-            </button>
+              ⬇ Download PDF
+            </a>
           </div>
         </div>
       </header>
