@@ -184,6 +184,7 @@ function PaymentForm({ templateId, paymentIntentId, amountCents, currency, templ
 
     sessionStorage.setItem("cv_paid_template", templateId);
     sessionStorage.setItem("cv_paid_payment_id", paymentIntentId);
+    sessionStorage.setItem("cv_paid_token", token);
     intentCache.delete(templateId); // prevent reusing the now-consumed PaymentIntent
     setSubmitting(false);
     navigate(`/checkout/${templateId}/done`);

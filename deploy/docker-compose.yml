@@ -1,0 +1,45 @@
+services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: cv_builder_db
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - cveditor_mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - cveditor
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: always
+    env_file: ./backend.env
+    depends_on:
+      - mysql
+    networks:
+      - cveditor
+      - n8n_default
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=n8n_default
+      - traefik.http.routers.cveditor-api.rule=Host(`thetranslations.cc`) && PathPrefix(`/cveditor/api`)
+      - traefik.http.routers.cveditor-api.entrypoints=websecure
+      - traefik.http.routers.cveditor-api.tls=true
+      - traefik.http.routers.cveditor-api.tls.certresolver=mytlschallenge
+      - traefik.http.middlewares.cveditor-strip.stripprefix.prefixes=/cveditor
+      - traefik.http.routers.cveditor-api.middlewares=cveditor-strip
+      - traefik.http.services.cveditor-api.loadbalancer.server.port=3001
+
+networks:
+  cveditor:
+    driver: bridge
+  n8n_default:
+    external: true
+
+volumes:
+  cveditor_mysql_data:
