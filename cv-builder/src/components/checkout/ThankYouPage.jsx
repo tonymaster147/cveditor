@@ -74,7 +74,9 @@ export default function ThankYouPage() {
     }
 
     const canvas = await html2canvas(node, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
-    const imgData = canvas.toDataURL("image/png");
+    // JPEG at 0.85 quality keeps a CV visually crisp while shrinking the PDF
+    // from ~14 MB (PNG) to ~2 MB. Email-friendly; still print-quality.
+    const imgData = canvas.toDataURL("image/jpeg", 0.85);
     const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
     const pageW = pdf.internal.pageSize.getWidth();
     const pageH = pdf.internal.pageSize.getHeight();
@@ -82,12 +84,12 @@ export default function ThankYouPage() {
     const imgH = (canvas.height * imgW) / canvas.width;
     const EPS = 1;
     if (imgH <= pageH + EPS) {
-      pdf.addImage(imgData, "PNG", 0, 0, imgW, imgH);
+      pdf.addImage(imgData, "JPEG", 0, 0, imgW, imgH);
     } else {
       let position = 0;
       let remaining = imgH;
       while (remaining > EPS) {
-        pdf.addImage(imgData, "PNG", 0, position, imgW, imgH);
+        pdf.addImage(imgData, "JPEG", 0, position, imgW, imgH);
         remaining -= pageH;
         position -= pageH;
         if (remaining > EPS) pdf.addPage();
