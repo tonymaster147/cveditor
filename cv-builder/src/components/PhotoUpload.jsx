@@ -100,7 +100,10 @@ export default function PhotoUpload({ value, onChange, size = 110, shape = "circ
             style={{
               width: size,
               height: size,
-              objectFit: "cover",
+              // "contain" shows the entire photo inside the circle (letterboxed),
+              // so no part of the image is hidden. Users can still zoom in (slider/wheel)
+              // and pan to crop tighter if they want a "cover"-style face shot.
+              objectFit: "contain",
               transform: `translate(-50%, -50%) translate(${photo.x}px, ${photo.y}px) scale(${photo.zoom})`,
               transformOrigin: "center",
             }}
