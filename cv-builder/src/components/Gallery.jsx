@@ -11,13 +11,6 @@ const THUMB_W = 360;
 const SCALE = THUMB_W / PAGE_W;
 const THUMB_H = PAGE_H * SCALE;
 
-const TRUST_BADGES = [
-  { icon: "★", title: "4.9 Trustpilot", accent: "amber" },
-  { icon: "📄", title: "10,000+ CVs Delivered" },
-  { icon: "🛟", title: "24/7 Support" },
-  { icon: "🛡", title: "Money-Back Guarantee" },
-];
-
 const FEATURE_PILLS = ["No sign-up", "No data stored", "DOCX + PDF", "Instant download"];
 
 // Auto-discovered from src/assets/logos/ at build time. Drop a file in and it
@@ -30,22 +23,6 @@ const WHY_FEATURES = [
   { icon: "👤", title: "Industry-Expert Writers", sub: "with 5+ Years' Experience" },
   { icon: "🔄", title: "Unlimited Revisions", sub: "for 14 Days" },
   { icon: "📦", title: "Fast Delivery", sub: "in 3-5 Business Days" },
-];
-
-const BEFORE_LIST = [
-  "Generic template with poor formatting",
-  "No keyword optimization for ATS",
-  "Unclear career achievements",
-  "Inconsistent structure and layout",
-  "Missing key selling points",
-];
-
-const AFTER_LIST = [
-  "Professional design tailored to your industry",
-  "Fully ATS-optimized with targeted keywords",
-  "Quantified achievements that stand out",
-  "Clear, logical structure that flows",
-  "Compelling narrative showcasing your value",
 ];
 
 const STEPS = [
@@ -97,23 +74,8 @@ export default function Gallery() {
           fonts, edit inline, then download as DOCX or PDF, instantly.
         </p>
 
-        {/* Trust badges */}
-        <div className="mt-6 sm:mt-7 grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-2 sm:gap-3 max-w-4xl mx-auto">
-          {TRUST_BADGES.map((b) => (
-            <div
-              key={b.title}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white border border-gray-200 shadow-sm justify-center"
-            >
-              <span className={`${b.accent === "amber" ? "text-amber-500" : "text-emerald-500"} text-base sm:text-lg flex-shrink-0`}>
-                {b.icon}
-              </span>
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">{b.title}</span>
-            </div>
-          ))}
-        </div>
-
         {/* Feature pills */}
-        <div className="mt-5 sm:mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-2">
           {FEATURE_PILLS.map((p) => (
             <span
               key={p}
@@ -196,58 +158,6 @@ export default function Gallery() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* BEFORE / AFTER */}
-      <section className="bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 px-2">
-            See the Difference a Professional CV Makes
-          </h2>
-          <p className="text-sm sm:text-base text-gray-600 mt-3 px-2">We turn your experience into a recruiter-ready story</p>
-
-          <div className="grid md:grid-cols-2 gap-4 sm:gap-6 mt-8 sm:mt-10 text-left relative">
-            <div className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 shadow-sm">
-              <div className="flex items-center gap-2 text-red-500 font-bold text-base sm:text-lg">
-                <span>📄</span> Before
-              </div>
-              <ul className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 text-sm text-gray-700">
-                {BEFORE_LIST.map((b) => (
-                  <li key={b} className="flex gap-2">
-                    <span className="text-red-500 flex-shrink-0">✕</span>
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="bg-white rounded-xl border-2 border-emerald-500 p-5 sm:p-6 shadow-sm">
-              <div className="flex items-center gap-2 text-emerald-600 font-bold text-base sm:text-lg">
-                <span>📄</span> After
-              </div>
-              <ul className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 text-sm text-gray-700">
-                {AFTER_LIST.map((a) => (
-                  <li key={a} className="flex gap-2">
-                    <span className="text-emerald-500 flex-shrink-0">✓</span>
-                    <span>{a}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Arrow between cards (md+ only, sits in the gap between the two cards) */}
-            <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-blue-500 text-white items-center justify-center font-bold text-lg shadow-lg">
-              →
-            </div>
-          </div>
-
-          <p className="mt-6 sm:mt-8 text-sm text-gray-700 px-2">
-            <a href="https://www.icover.org.uk/order-now/" target="_blank" rel="noopener noreferrer" className="font-bold text-blue-600 hover:underline">
-              90% of iCover clients
-            </a>
-            {" "}land interviews within 4 weeks
-          </p>
         </div>
       </section>
 
