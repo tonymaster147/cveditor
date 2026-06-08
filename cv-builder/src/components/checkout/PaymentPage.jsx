@@ -251,7 +251,7 @@ function PaymentForm({ templateId, paymentIntentId, amountCents, currency, templ
           <button
             type="submit"
             disabled={!stripe || submitting}
-            className="px-5 py-2 text-sm rounded bg-emerald-500 hover:bg-emerald-600 text-white font-semibold disabled:opacity-50"
+            className="px-5 py-2 text-sm rounded bg-amber-500 hover:bg-amber-600 text-white font-semibold disabled:opacity-50"
           >
             {submitting ? "Processing…" : `Pay ${priceLabel}`}
           </button>

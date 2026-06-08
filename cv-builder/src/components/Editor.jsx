@@ -122,7 +122,7 @@ export default function Editor() {
               </select>
               <button
                 onClick={handleDownload}
-                className="px-4 py-1.5 rounded bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold"
+                className="px-4 py-1.5 rounded bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold"
               >
                 ⬇ Download {format.toUpperCase()}
               </button>

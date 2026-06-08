@@ -77,7 +77,7 @@ export default function ChoosePlanPage() {
             <button
               disabled={!price}
               onClick={() => navigate(`/checkout/${templateId}/payment`)}
-              className="w-full py-3 rounded bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-base disabled:opacity-50"
+              className="w-full py-3 rounded bg-amber-500 hover:bg-amber-600 text-white font-semibold text-base disabled:opacity-50"
             >
               Continue to payment
             </button>

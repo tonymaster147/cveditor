@@ -81,3 +81,24 @@ html, body, #root {
 .exporting .no-export {
   display: none !important;
 }
+
+
+/* Auto-scrolling logo marquee. The track is the duplicated logo list at
+   width: max-content, so translating -50% lands on an identical layout —
+   the loop is seamless. Pauses on hover so users can read a specific logo. */
+@keyframes logo-marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.logo-marquee {
+  animation: logo-marquee-scroll 30s linear infinite;
+  will-change: transform;
+}
+.logo-marquee:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee {
+    animation: none;
+  }
+}

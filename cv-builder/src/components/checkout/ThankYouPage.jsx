@@ -192,7 +192,7 @@ export default function ThankYouPage() {
           <div className="flex gap-2 justify-center flex-wrap pt-2">
             <button
               onClick={runDownload}
-              className="px-5 py-2 rounded bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold"
+              className="px-5 py-2 rounded bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold"
             >
               ⬇ Download again ({format.toUpperCase()})
             </button>
