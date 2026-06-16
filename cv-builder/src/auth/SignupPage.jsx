@@ -41,7 +41,16 @@ export default function SignupPage() {
     }
     setLoading(true);
     try {
-      await signup(email, password);
+      // If the caller passed router state.from (e.g. via Link state), promote it
+      // into sessionStorage so the verify page can read it after OTP succeeds.
+      if (state?.from && !sessionStorage.getItem("cv_after_auth_redirect")) {
+        sessionStorage.setItem("cv_after_auth_redirect", state.from);
+      }
+      const result = await signup(email, password);
+      if (result.pending) {
+        navigate(`/verify-email?email=${encodeURIComponent(result.email)}`, { replace: true });
+        return;
+      }
       navigate(popPostAuthRedirect(state?.from), { replace: true });
     } catch (err) {
       setError(err.message);

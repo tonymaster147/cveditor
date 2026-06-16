@@ -22,6 +22,9 @@ router.post("/create-payment-intent", async (req, res) => {
   if (purchaseKind === "lifetime") {
     // Lifetime requires a logged-in user so we can flip their plan on success.
     if (!req.user) return res.status(401).json({ error: "Log in to buy the lifetime plan." });
+    if (!req.user.email_verified_at) {
+      return res.status(403).json({ error: "Please verify your email before purchasing the lifetime plan." });
+    }
     if (req.user.plan === "lifetime") {
       return res.status(409).json({ error: "You already have lifetime access." });
     }

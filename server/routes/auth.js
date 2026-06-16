@@ -8,10 +8,37 @@ import {
   clearSessionCookie,
   requireUser,
   generateResetToken,
+  generateOtp,
   hashToken,
   rateLimit,
 } from "../auth.js";
 import { getTransporter, fromAddress } from "../mailer.js";
+
+const OTP_TTL_MIN = 10;          // valid for 10 minutes
+const OTP_MAX_ATTEMPTS = 5;      // wrong codes before the row is wiped
+const OTP_RESEND_COOLDOWN_S = 60; // seconds between resend requests
+
+async function sendOtpEmail(toEmail, otp) {
+  const t = getTransporter();
+  await t.sendMail({
+    from: fromAddress(),
+    to: toEmail,
+    subject: `Your iCover verification code: ${otp}`,
+    text: [
+      `Your iCover verification code is: ${otp}`,
+      "",
+      `It expires in ${OTP_TTL_MIN} minutes. If you didn't request this, ignore this email.`,
+      "",
+      "— iCover",
+    ].join("\n"),
+    html: `
+      <p>Your iCover verification code is:</p>
+      <p style="font-size:28px;font-weight:700;letter-spacing:6px;color:#111">${otp}</p>
+      <p style="color:#666;font-size:12px">It expires in ${OTP_TTL_MIN} minutes. If you didn't request this, ignore this email.</p>
+      <p style="color:#666;font-size:12px">— iCover</p>
+    `,
+  });
+}
 
 const router = Router();
 
@@ -26,6 +53,8 @@ function validCreds(email, password) {
     && password.length >= PASSWORD_MIN;
 }
 
+// Step 1: collect email+password, send an OTP, write a pending row.
+// No user account is created yet — that happens after the OTP succeeds.
 router.post("/auth/signup",
   rateLimit({ windowMs: 60 * 60 * 1000, max: 10, key: "signup" }),
   async (req, res) => {
@@ -42,15 +71,150 @@ router.post("/auth/signup",
       return res.status(409).json({ error: "An account with this email already exists." });
     }
 
-    const hash = await hashPassword(password);
-    const [result] = await pool.query(
-      "INSERT INTO users (email, password_hash, plan) VALUES (?, ?, 'none')",
-      [normalised, hash]
+    const passwordHash = await hashPassword(password);
+    const otp = generateOtp();
+    const otpHash = hashToken(otp);
+    const expiresAt = new Date(Date.now() + OTP_TTL_MIN * 60 * 1000);
+
+    // UPSERT — if the user retried signup before verifying, replace the row.
+    await pool.query(
+      `INSERT INTO email_verifications (email, password_hash, otp_hash, expires_at, attempts, last_sent_at)
+       VALUES (?, ?, ?, ?, 0, NOW())
+       ON DUPLICATE KEY UPDATE
+         password_hash = VALUES(password_hash),
+         otp_hash      = VALUES(otp_hash),
+         expires_at    = VALUES(expires_at),
+         attempts      = 0,
+         last_sent_at  = NOW()`,
+      [normalised, passwordHash, otpHash, expiresAt]
     );
 
-    const user = { id: result.insertId, email: normalised, plan: "none" };
-    setSessionCookie(res, signSession(user));
-    res.json({ user });
+    try {
+      await sendOtpEmail(normalised, otp);
+    } catch (err) {
+      console.error("OTP email send failed:", err);
+      return res.status(502).json({ error: "Couldn't send the verification email. Please try again." });
+    }
+
+    res.json({ pending: true, email: normalised });
+  }
+);
+
+// Step 2: user submits the 6-digit OTP. On success we create the real user,
+// log them in, and delete the pending row.
+router.post("/auth/verify-otp",
+  rateLimit({ windowMs: 15 * 60 * 1000, max: 20, key: "verify-otp" }),
+  async (req, res) => {
+    const { email, otp } = req.body || {};
+    if (typeof email !== "string" || typeof otp !== "string" || !/^\d{6}$/.test(otp.trim())) {
+      return res.status(400).json({ error: "Invalid request." });
+    }
+    const normalised = email.trim().toLowerCase();
+
+    const conn = await pool.getConnection();
+    try {
+      await conn.beginTransaction();
+      const [rows] = await conn.query(
+        `SELECT id, password_hash, otp_hash, expires_at, attempts
+           FROM email_verifications
+          WHERE email = ?
+          FOR UPDATE`,
+        [normalised]
+      );
+      if (!rows.length) {
+        await conn.rollback();
+        return res.status(400).json({ error: "No pending verification — please sign up again." });
+      }
+      const v = rows[0];
+
+      if (new Date(v.expires_at).getTime() < Date.now()) {
+        await conn.query("DELETE FROM email_verifications WHERE id = ?", [v.id]);
+        await conn.commit();
+        return res.status(400).json({ error: "Code expired — please request a new one." });
+      }
+
+      if (v.attempts >= OTP_MAX_ATTEMPTS) {
+        await conn.query("DELETE FROM email_verifications WHERE id = ?", [v.id]);
+        await conn.commit();
+        return res.status(429).json({ error: "Too many wrong attempts — please sign up again." });
+      }
+
+      if (v.otp_hash !== hashToken(otp.trim())) {
+        await conn.query("UPDATE email_verifications SET attempts = attempts + 1 WHERE id = ?", [v.id]);
+        await conn.commit();
+        const remaining = OTP_MAX_ATTEMPTS - (v.attempts + 1);
+        return res.status(400).json({
+          error: remaining > 0
+            ? `Wrong code. ${remaining} ${remaining === 1 ? "attempt" : "attempts"} remaining.`
+            : "Wrong code. No attempts remaining — please sign up again.",
+        });
+      }
+
+      // Correct OTP. Create the user, log them in.
+      const [insert] = await conn.query(
+        "INSERT INTO users (email, password_hash, plan, email_verified_at) VALUES (?, ?, 'none', NOW())",
+        [normalised, v.password_hash]
+      );
+      await conn.query("DELETE FROM email_verifications WHERE id = ?", [v.id]);
+      await conn.commit();
+
+      const user = { id: insert.insertId, email: normalised, plan: "none" };
+      setSessionCookie(res, signSession(user));
+      res.json({ user });
+    } catch (err) {
+      await conn.rollback();
+      throw err;
+    } finally {
+      conn.release();
+    }
+  }
+);
+
+router.post("/auth/resend-otp",
+  rateLimit({ windowMs: 60 * 60 * 1000, max: 10, key: "resend-otp" }),
+  async (req, res) => {
+    const { email } = req.body || {};
+    if (typeof email !== "string" || !EMAIL_RE.test(email)) {
+      return res.status(400).json({ error: "Invalid email." });
+    }
+    const normalised = email.trim().toLowerCase();
+
+    const [rows] = await pool.query(
+      "SELECT id, last_sent_at FROM email_verifications WHERE email = ?",
+      [normalised]
+    );
+    if (!rows.length) {
+      // Don't reveal whether a pending signup exists.
+      return res.json({ ok: true });
+    }
+    const v = rows[0];
+
+    const sinceLast = (Date.now() - new Date(v.last_sent_at).getTime()) / 1000;
+    if (sinceLast < OTP_RESEND_COOLDOWN_S) {
+      return res.status(429).json({
+        error: `Please wait ${Math.ceil(OTP_RESEND_COOLDOWN_S - sinceLast)}s before requesting another code.`,
+      });
+    }
+
+    const otp = generateOtp();
+    const otpHash = hashToken(otp);
+    const expiresAt = new Date(Date.now() + OTP_TTL_MIN * 60 * 1000);
+
+    await pool.query(
+      `UPDATE email_verifications
+         SET otp_hash = ?, expires_at = ?, attempts = 0, last_sent_at = NOW()
+       WHERE id = ?`,
+      [otpHash, expiresAt, v.id]
+    );
+
+    try {
+      await sendOtpEmail(normalised, otp);
+    } catch (err) {
+      console.error("OTP resend failed:", err);
+      return res.status(502).json({ error: "Couldn't send the verification email." });
+    }
+
+    res.json({ ok: true });
   }
 );
 
@@ -82,8 +246,16 @@ router.post("/auth/logout", (_req, res) => {
 
 router.get("/auth/me", (req, res) => {
   if (!req.user) return res.json({ user: null });
-  const { id, email, plan, created_at } = req.user;
-  res.json({ user: { id, email, plan, created_at } });
+  const { id, email, plan, created_at, email_verified_at } = req.user;
+  res.json({
+    user: {
+      id,
+      email,
+      plan,
+      created_at,
+      emailVerified: !!email_verified_at,
+    },
+  });
 });
 
 router.post("/auth/change-password", requireUser, async (req, res) => {

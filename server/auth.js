@@ -64,7 +64,7 @@ export async function attachUser(req, _res, next) {
   const claims = verifySession(token);
   if (!claims?.uid) { req.user = null; return next(); }
   const [rows] = await pool.query(
-    "SELECT id, email, plan, created_at FROM users WHERE id = ?",
+    "SELECT id, email, plan, created_at, email_verified_at FROM users WHERE id = ?",
     [claims.uid]
   );
   req.user = rows[0] || null;
@@ -85,6 +85,13 @@ export function generateResetToken() {
 }
 export function hashToken(raw) {
   return crypto.createHash("sha256").update(raw).digest("hex");
+}
+
+// 6-digit OTP for email verification. Hashed before storage for the same
+// reason as reset tokens.
+export function generateOtp() {
+  // Pad to 6 digits so values like 042938 don't render as 42938.
+  return String(crypto.randomInt(0, 1_000_000)).padStart(6, "0");
 }
 
 // Trivial in-memory rate limiter, keyed by IP+route. Resets every windowMs.

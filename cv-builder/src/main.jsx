@@ -12,6 +12,7 @@ import ThankYouPage from "./components/checkout/ThankYouPage.jsx";
 import { AuthProvider } from "./auth/AuthContext.jsx";
 import LoginPage from "./auth/LoginPage.jsx";
 import SignupPage from "./auth/SignupPage.jsx";
+import VerifyEmailPage from "./auth/VerifyEmailPage.jsx";
 import ForgotPasswordPage from "./auth/ForgotPasswordPage.jsx";
 import ResetPasswordPage from "./auth/ResetPasswordPage.jsx";
 import DashboardPage from "./auth/DashboardPage.jsx";
@@ -29,6 +30,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/checkout/:templateId/done" element={<ThankYouPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />

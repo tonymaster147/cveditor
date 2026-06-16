@@ -96,14 +96,18 @@ export default function PhotoUpload({ value, onChange, size = 110, shape = "circ
             src={photo.src}
             alt=""
             draggable={false}
-            className="absolute top-1/2 left-1/2 pointer-events-none select-none max-w-none"
+            className="absolute top-1/2 left-1/2 pointer-events-none select-none"
             style={{
-              width: size,
-              height: size,
-              // "contain" shows the entire photo inside the circle (letterboxed),
-              // so no part of the image is hidden. Users can still zoom in (slider/wheel)
-              // and pan to crop tighter if they want a "cover"-style face shot.
-              objectFit: "contain",
+              // Cap the image at the frame's longest side; let the browser
+              // pick the other dimension from the source aspect ratio. This
+              // is equivalent to object-fit: contain at zoom=1, but expressed
+              // through real width/height so html2canvas (which doesn't fully
+              // honour object-fit when combined with transform: scale)
+              // renders without stretching the photo.
+              maxWidth: size,
+              maxHeight: size,
+              width: "auto",
+              height: "auto",
               transform: `translate(-50%, -50%) translate(${photo.x}px, ${photo.y}px) scale(${photo.zoom})`,
               transformOrigin: "center",
             }}

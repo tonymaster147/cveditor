@@ -9,6 +9,8 @@ const AuthContext = createContext({
   login: async () => {},
   logout: async () => {},
   refresh: async () => {},
+  verifyOtp: async () => {},
+  resendOtp: async () => {},
 });
 
 export function AuthProvider({ children }) {
@@ -29,6 +31,9 @@ export function AuthProvider({ children }) {
 
   useEffect(() => { refresh(); }, [refresh]);
 
+  // Returns either { user }  → account exists and we're logged in,
+  //         or     { pending: true, email } → OTP sent, frontend should
+  //                navigate to the verification page.
   const signup = useCallback(async (email, password) => {
     const r = await fetch(`${API_BASE}/api/auth/signup`, {
       method: "POST",
@@ -38,8 +43,33 @@ export function AuthProvider({ children }) {
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.error || "Sign up failed");
+    if (data.pending) return { pending: true, email: data.email };
+    setUser(data.user);
+    return { user: data.user };
+  }, []);
+
+  const verifyOtp = useCallback(async (email, otp) => {
+    const r = await fetch(`${API_BASE}/api/auth/verify-otp`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || "Verification failed");
     setUser(data.user);
     return data.user;
+  }, []);
+
+  const resendOtp = useCallback(async (email) => {
+    const r = await fetch(`${API_BASE}/api/auth/resend-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || "Couldn't resend code");
+    return data;
   }, []);
 
   const login = useCallback(async (email, password) => {
@@ -64,7 +94,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, signup, login, logout, refresh }}>
+    <AuthContext.Provider value={{ user, loading, signup, login, logout, refresh, verifyOtp, resendOtp }}>
       {children}
     </AuthContext.Provider>
   );
