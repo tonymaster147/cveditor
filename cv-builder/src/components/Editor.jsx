@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { initialData } from "../data/initialData";
 import { setPath } from "../templates/helpers";
 import { TEMPLATES } from "../templates/registry";
+import { useAuth } from "../auth/AuthContext";
 import logoUrl from "../assets/Icover-Org-Uk.webp";
 
 const ACCENTS = ["#10b981", "#3b82f6", "#8b5cf6", "#ef4444", "#f59e0b", "#0ea5e9", "#ec4899", "#111827", "#06b6d4", "#6366f1"];
@@ -10,6 +11,7 @@ const ACCENTS = ["#10b981", "#3b82f6", "#8b5cf6", "#ef4444", "#f59e0b", "#0ea5e9
 export default function Editor() {
   const { templateId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const currentTemplate = TEMPLATES.find((t) => t.id === templateId);
 
@@ -50,11 +52,20 @@ export default function Editor() {
       sessionStorage.setItem("cv_state_data", JSON.stringify(data));
       sessionStorage.setItem("cv_state_accent", accent);
       sessionStorage.setItem("cv_state_format", format);
-      sessionStorage.removeItem("cv_paid_template");
       sessionStorage.removeItem("cv_paid_payment_id");
     } catch {
       // sessionStorage full / disabled — proceed anyway; ThankYou will fall back to initialData.
     }
+
+    // Lifetime subscribers skip the checkout entirely.
+    if (user?.plan === "lifetime") {
+      sessionStorage.setItem("cv_paid_template", templateId);
+      sessionStorage.setItem("cv_paid_kind", "lifetime");
+      navigate(`/checkout/${templateId}/done`);
+      return;
+    }
+
+    sessionStorage.removeItem("cv_paid_template");
     navigate(`/checkout/${templateId}`);
   };
 

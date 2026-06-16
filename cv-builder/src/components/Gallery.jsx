@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { TEMPLATES } from "../templates/registry";
 import { initialData } from "../data/initialData";
 import { TESTIMONIALS } from "../data/testimonials";
+import { useAuth } from "../auth/AuthContext";
 import logoUrl from "../assets/Icover-Org-Uk.webp";
 
 const PAGE_W = 794;
@@ -50,6 +51,7 @@ const scrollToTemplates = (e) => {
 };
 
 export default function Gallery() {
+  const { user, loading: authLoading } = useAuth();
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <header className="bg-white border-b shadow-sm">
@@ -57,9 +59,30 @@ export default function Gallery() {
           <Link to="/" className="flex items-center gap-2 flex-shrink-0">
             <img src={logoUrl} alt="iCover" className="h-7 sm:h-9 w-auto" />
           </Link>
-          <div className="text-[11px] sm:text-sm text-gray-500 text-right">
-            <span className="hidden sm:inline">No sign-up · Free · No data stored</span>
-            <span className="sm:hidden">Free · No sign-up</span>
+          <div className="flex items-center gap-3">
+            <div className="hidden md:block text-sm text-gray-500">No CV data stored · Free</div>
+            {!authLoading && (
+              user ? (
+                <Link
+                  to="/dashboard"
+                  className="text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-50"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link to="/login" className="text-xs sm:text-sm text-gray-700 hover:text-gray-900">
+                    Log in
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )
+            )}
           </div>
         </div>
       </header>

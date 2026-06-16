@@ -10,23 +10,25 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { TEMPLATES } from "../../templates/registry";
+import { useAuth } from "../../auth/AuthContext";
 import CheckoutLayout from "./CheckoutLayout";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3001";
 
-// Cache PaymentIntent promises by templateId. Without this React StrictMode's
-// double-invoked effects (dev) — and even ordinary back/forward navigation —
-// would create two PaymentIntents per checkout. Reusing the in-flight promise
-// gives us "create at most once per templateId per session".
+// Cache PaymentIntent promises by `templateId::kind`. Without this React
+// StrictMode's double-invoked effects (dev) — and back/forward navigation —
+// would create two PaymentIntents per checkout.
 const intentCache = new Map();
-function getOrCreateIntent(templateId) {
-  const existing = intentCache.get(templateId);
+function getOrCreateIntent(templateId, kind) {
+  const key = `${templateId}::${kind}`;
+  const existing = intentCache.get(key);
   if (existing) return existing;
   const promise = fetch(`${API_BASE}/api/create-payment-intent`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ templateId }),
+    body: JSON.stringify({ templateId, kind }),
   })
     .then(async (r) => {
       const data = await r.json();
@@ -35,10 +37,10 @@ function getOrCreateIntent(templateId) {
     })
     .catch((err) => {
       // Don't poison the cache with a rejected promise — let the next call retry.
-      intentCache.delete(templateId);
+      intentCache.delete(key);
       throw err;
     });
-  intentCache.set(templateId, promise);
+  intentCache.set(key, promise);
   return promise;
 }
 
@@ -47,8 +49,9 @@ function formatPrice(cents, currency) {
   return `${(cents / 100).toFixed(2)} ${currency.toUpperCase()}`;
 }
 
-function PaymentForm({ templateId, paymentIntentId, amountCents, currency, templateName }) {
+function PaymentForm({ templateId, paymentIntentId, amountCents, currency, templateName, kind }) {
   const navigate = useNavigate();
+  const { refresh: refreshUser } = useAuth();
   const stripe = useStripe();
   const elements = useElements();
   const [step, setStep] = useState(1); // 1 = details, 2 = card
@@ -134,7 +137,46 @@ function PaymentForm({ templateId, paymentIntentId, amountCents, currency, templ
       return;
     }
 
-    // Poll for webhook-issued token (max ~5s in dev — webhooks usually arrive in <1s).
+    // Lifetime path: no download token needed. Confirm server-side to make
+    // sure the user's plan is flipped, then go to the thank-you page.
+    if (kind === "lifetime") {
+      let ok = false;
+      for (let i = 0; i < 10; i++) {
+        const r = await fetch(`${API_BASE}/api/payment-status/${paymentIntentId}`);
+        const data = await r.json();
+        if (data.status === "succeeded") { ok = true; break; }
+        if (data.status === "failed") {
+          setError("Payment failed.");
+          setSubmitting(false);
+          return;
+        }
+        await new Promise((res) => setTimeout(res, 500));
+      }
+      if (!ok) {
+        const confirmRes = await fetch(`${API_BASE}/api/confirm-payment`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ paymentIntentId }),
+        });
+        const confirmData = await confirmRes.json();
+        if (!confirmRes.ok || confirmData.status !== "succeeded") {
+          setError("Payment succeeded but we couldn't confirm. Contact support: " + paymentIntentId);
+          setSubmitting(false);
+          return;
+        }
+      }
+      sessionStorage.setItem("cv_paid_template", templateId);
+      sessionStorage.setItem("cv_paid_payment_id", paymentIntentId);
+      sessionStorage.setItem("cv_paid_kind", "lifetime");
+      intentCache.delete(`${templateId}::lifetime`);
+      await refreshUser();
+      setSubmitting(false);
+      navigate(`/checkout/${templateId}/done`);
+      return;
+    }
+
+    // ---- one-time download path ----
     let token = null;
     for (let i = 0; i < 10; i++) {
       const r = await fetch(`${API_BASE}/api/payment-status/${paymentIntentId}`);
@@ -151,10 +193,10 @@ function PaymentForm({ templateId, paymentIntentId, amountCents, currency, templ
       await new Promise((res) => setTimeout(res, 500));
     }
 
-    // Webhook hasn't arrived (or isn't configured in dev). Fall back to server-side verification.
     if (!token) {
       const confirmRes = await fetch(`${API_BASE}/api/confirm-payment`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ paymentIntentId }),
       });
@@ -185,7 +227,8 @@ function PaymentForm({ templateId, paymentIntentId, amountCents, currency, templ
     sessionStorage.setItem("cv_paid_template", templateId);
     sessionStorage.setItem("cv_paid_payment_id", paymentIntentId);
     sessionStorage.setItem("cv_paid_token", token);
-    intentCache.delete(templateId); // prevent reusing the now-consumed PaymentIntent
+    sessionStorage.setItem("cv_paid_kind", "one_time");
+    intentCache.delete(`${templateId}::one_time`);
     setSubmitting(false);
     navigate(`/checkout/${templateId}/done`);
   };
@@ -268,26 +311,30 @@ export default function PaymentPage() {
   const [intent, setIntent] = useState(null);
   const [error, setError] = useState(null);
 
+  // Picked on the Choose-plan page; defaults to one_time for safety.
+  const kind = sessionStorage.getItem("cv_checkout_kind") === "lifetime" ? "lifetime" : "one_time";
+
   useEffect(() => {
     if (!template) {
       navigate("/", { replace: true });
       return;
     }
     let cancelled = false;
-    getOrCreateIntent(templateId)
+    getOrCreateIntent(templateId, kind)
       .then((data) => { if (!cancelled) setIntent(data); })
       .catch((e) => { if (!cancelled) setError(e.message); });
     return () => { cancelled = true; };
-  }, [templateId, template, navigate]);
+  }, [templateId, template, navigate, kind]);
 
   if (!template) return null;
+  const isLifetime = kind === "lifetime";
 
   return (
     <CheckoutLayout activeStep={3} onClose={() => navigate(`/edit/${templateId}`)}>
       <div className="max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold mb-1">Complete your purchase</h1>
         <p className="text-sm text-gray-600 mb-6">
-          {template.name} CV
+          {isLifetime ? "Lifetime access — all templates" : `${template.name} CV`}
           {intent && <> — <span className="font-semibold">{formatPrice(intent.amountCents, intent.currency)}</span></>}
         </p>
 
@@ -307,6 +354,7 @@ export default function PaymentPage() {
                 amountCents={intent.amountCents}
                 currency={intent.currency}
                 templateName={intent.templateName}
+                kind={kind}
               />
             </Elements>
           )}

@@ -37,18 +37,19 @@ CREATE TABLE IF NOT EXISTS payments (
   INDEX idx_status   (status)
 ) ENGINE=InnoDB;
 
--- Seed prices (GBP pence). Edit later in phpMyAdmin.
+-- Seed prices (GBP pence). All one-time downloads are £3.99 — change here
+-- AND in phpMyAdmin if you want to override existing rows after a re-seed.
 INSERT INTO templates (id, name, price_cents, currency) VALUES
-  ('photo-sidebar',  'Photo Sidebar',   349, 'gbp'),
-  ('photo-header',   'Photo Header',    299, 'gbp'),
-  ('modern',         'Modern',          199, 'gbp'),
-  ('stylish',        'Stylish',         249, 'gbp'),
-  ('double',         'Double Column',   299, 'gbp'),
-  ('classic',        'Classic',         149, 'gbp'),
-  ('minimal',        'Minimal',         149, 'gbp'),
-  ('creative',       'Creative Split',  349, 'gbp'),
+  ('photo-sidebar',  'Photo Sidebar',   399, 'gbp'),
+  ('photo-header',   'Photo Header',    399, 'gbp'),
+  ('modern',         'Modern',          399, 'gbp'),
+  ('stylish',        'Stylish',         399, 'gbp'),
+  ('double',         'Double Column',   399, 'gbp'),
+  ('classic',        'Classic',         399, 'gbp'),
+  ('minimal',        'Minimal',         399, 'gbp'),
+  ('creative',       'Creative Split',  399, 'gbp'),
   ('executive',      'Executive Suite', 399, 'gbp'),
-  ('bold',           'Bold Header',     199, 'gbp'),
-  ('timeline',       'Timeline',        249, 'gbp'),
-  ('elegant',        'Elegant',         299, 'gbp')
+  ('bold',           'Bold Header',     399, 'gbp'),
+  ('timeline',       'Timeline',        399, 'gbp'),
+  ('elegant',        'Elegant',         399, 'gbp')
 ON DUPLICATE KEY UPDATE name = VALUES(name);

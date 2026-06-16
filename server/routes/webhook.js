@@ -19,15 +19,46 @@ router.post("/", async (req, res) => {
 
   if (event.type === "payment_intent.succeeded") {
     const pi = event.data.object;
-    const token = crypto.randomBytes(32).toString("hex");
-    await pool.query(
-      `UPDATE payments
-         SET status = 'succeeded',
-             download_token = COALESCE(download_token, ?),
-             customer_email = ?
-       WHERE stripe_payment_intent_id = ?`,
-      [token, pi.receipt_email || null, pi.id]
+    // Look up the payment to find out whether it's one-time or lifetime.
+    const [rows] = await pool.query(
+      "SELECT id, purchase_kind, user_id FROM payments WHERE stripe_payment_intent_id = ?",
+      [pi.id]
     );
+    if (rows.length) {
+      const row = rows[0];
+      if (row.purchase_kind === "lifetime") {
+        const conn = await pool.getConnection();
+        try {
+          await conn.beginTransaction();
+          await conn.query(
+            `UPDATE payments
+               SET status = 'succeeded',
+                   customer_email = COALESCE(customer_email, ?)
+             WHERE stripe_payment_intent_id = ?`,
+            [pi.receipt_email || null, pi.id]
+          );
+          if (row.user_id) {
+            await conn.query("UPDATE users SET plan = 'lifetime' WHERE id = ?", [row.user_id]);
+          }
+          await conn.commit();
+        } catch (err) {
+          await conn.rollback();
+          throw err;
+        } finally {
+          conn.release();
+        }
+      } else {
+        const token = crypto.randomBytes(32).toString("hex");
+        await pool.query(
+          `UPDATE payments
+             SET status = 'succeeded',
+                 download_token = COALESCE(download_token, ?),
+                 customer_email = ?
+           WHERE stripe_payment_intent_id = ?`,
+          [token, pi.receipt_email || null, pi.id]
+        );
+      }
+    }
   } else if (event.type === "payment_intent.payment_failed") {
     await pool.query(
       `UPDATE payments SET status = 'failed' WHERE stripe_payment_intent_id = ?`,

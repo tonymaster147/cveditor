@@ -1,12 +1,15 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
+import { attachUser } from "./auth.js";
 import templatesRoute from "./routes/templates.js";
 import paymentRoute from "./routes/payment.js";
 import webhookRoute from "./routes/webhook.js";
 import downloadRoute from "./routes/download.js";
 import emailRoute from "./routes/email.js";
+import authRoute from "./routes/auth.js";
 
 const app = express();
 
@@ -23,6 +26,9 @@ app.use(cors({
     // Disallow: tell cors to skip CORS headers, browser will block.
     cb(null, false);
   },
+  // Session cookies are httpOnly + cross-origin → browser sends them only
+  // when the response set Access-Control-Allow-Credentials: true.
+  credentials: true,
 }));
 
 // Stripe webhook MUST receive the raw body for signature verification.
@@ -33,7 +39,10 @@ app.use("/api/stripe-webhook", express.raw({ type: "application/json" }), webhoo
 // base64-encoded file upload — multi-page PDFs at 2x scale can hit 15 MB+
 // after base64 expansion. Per-route size guards live inside the routes.
 app.use(express.json({ limit: "25mb" }));
+app.use(cookieParser());
+app.use(attachUser);
 
+app.use("/api", authRoute);
 app.use("/api", templatesRoute);
 app.use("/api", paymentRoute);
 app.use("/api", downloadRoute);

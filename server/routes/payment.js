@@ -6,8 +6,52 @@ import { pool } from "../db.js";
 const router = Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Lifetime plan price — flat £29.99 = 2999 pence, in the same currency as
+// the one-time products. Changing this is a code change, not a DB edit.
+const LIFETIME_PRICE_CENTS = 2999;
+const LIFETIME_CURRENCY = "gbp";
+
+router.get("/lifetime-plan", (_req, res) => {
+  res.json({ priceCents: LIFETIME_PRICE_CENTS, currency: LIFETIME_CURRENCY });
+});
+
 router.post("/create-payment-intent", async (req, res) => {
-  const { templateId } = req.body || {};
+  const { templateId, kind } = req.body || {};
+  const purchaseKind = kind === "lifetime" ? "lifetime" : "one_time";
+
+  if (purchaseKind === "lifetime") {
+    // Lifetime requires a logged-in user so we can flip their plan on success.
+    if (!req.user) return res.status(401).json({ error: "Log in to buy the lifetime plan." });
+    if (req.user.plan === "lifetime") {
+      return res.status(409).json({ error: "You already have lifetime access." });
+    }
+
+    const intent = await stripe.paymentIntents.create({
+      amount: LIFETIME_PRICE_CENTS,
+      currency: LIFETIME_CURRENCY,
+      automatic_payment_methods: { enabled: true, allow_redirects: "never" },
+      description: "iCover CV Builder — Lifetime access to all templates",
+      metadata: { kind: "lifetime", user_id: String(req.user.id) },
+      receipt_email: req.user.email,
+    });
+
+    await pool.query(
+      `INSERT INTO payments (stripe_payment_intent_id, template_id, amount_cents, currency, purchase_kind, user_id, customer_email, status)
+       VALUES (?, NULL, ?, ?, 'lifetime', ?, ?, 'pending')`,
+      [intent.id, LIFETIME_PRICE_CENTS, LIFETIME_CURRENCY, req.user.id, req.user.email]
+    );
+
+    return res.json({
+      clientSecret: intent.client_secret,
+      paymentIntentId: intent.id,
+      amountCents: LIFETIME_PRICE_CENTS,
+      currency: LIFETIME_CURRENCY,
+      templateName: "Lifetime access (all templates)",
+      kind: "lifetime",
+    });
+  }
+
+  // ---- one-time template purchase (existing flow) ----
   if (!templateId) return res.status(400).json({ error: "templateId required" });
 
   const [rows] = await pool.query(
@@ -21,16 +65,18 @@ router.post("/create-payment-intent", async (req, res) => {
     amount: t.price_cents,
     currency: t.currency,
     automatic_payment_methods: { enabled: true, allow_redirects: "never" },
-    // Required for India-registered Stripe accounts (RBI export-transaction rule):
-    // every charge must carry a human-readable description of the goods/services.
     description: `iCover CV Builder — ${t.name} template download`,
-    metadata: { template_id: t.id, template_name: t.name },
+    metadata: {
+      template_id: t.id,
+      template_name: t.name,
+      ...(req.user ? { user_id: String(req.user.id) } : {}),
+    },
   });
 
   await pool.query(
-    `INSERT INTO payments (stripe_payment_intent_id, template_id, amount_cents, currency, status)
-     VALUES (?, ?, ?, ?, 'pending')`,
-    [intent.id, t.id, t.price_cents, t.currency]
+    `INSERT INTO payments (stripe_payment_intent_id, template_id, amount_cents, currency, purchase_kind, user_id, status)
+     VALUES (?, ?, ?, ?, 'one_time', ?, 'pending')`,
+    [intent.id, t.id, t.price_cents, t.currency, req.user?.id || null]
   );
 
   res.json({
@@ -39,6 +85,7 @@ router.post("/create-payment-intent", async (req, res) => {
     amountCents: t.price_cents,
     currency: t.currency,
     templateName: t.name,
+    kind: "one_time",
   });
 });
 
@@ -99,14 +146,18 @@ router.post("/confirm-payment", async (req, res) => {
   if (!paymentIntentId) return res.status(400).json({ error: "paymentIntentId required" });
 
   const [existing] = await pool.query(
-    "SELECT id, status, download_token FROM payments WHERE stripe_payment_intent_id = ?",
+    "SELECT id, status, download_token, purchase_kind, user_id FROM payments WHERE stripe_payment_intent_id = ?",
     [paymentIntentId]
   );
   if (existing.length === 0) return res.status(404).json({ error: "Payment not found" });
 
-  // Already confirmed via webhook? Return the existing token.
-  if (existing[0].status === "succeeded" && existing[0].download_token) {
-    return res.json({ status: "succeeded", downloadToken: existing[0].download_token });
+  // Already confirmed via webhook? Return the existing token (or lifetime ack).
+  if (existing[0].status === "succeeded" && (existing[0].download_token || existing[0].purchase_kind === "lifetime")) {
+    return res.json({
+      status: "succeeded",
+      downloadToken: existing[0].download_token || null,
+      kind: existing[0].purchase_kind,
+    });
   }
 
   // Ask Stripe directly.
@@ -115,7 +166,36 @@ router.post("/confirm-payment", async (req, res) => {
     return res.json({ status: pi.status, downloadToken: null });
   }
 
-  // Issue a token (same logic as the webhook).
+  if (existing[0].purchase_kind === "lifetime") {
+    // Mark payment succeeded and flip the user's plan. Atomic transaction
+    // so we never end up with a paid row but an un-upgraded user.
+    const conn = await pool.getConnection();
+    try {
+      await conn.beginTransaction();
+      await conn.query(
+        `UPDATE payments
+           SET status = 'succeeded',
+               customer_email = COALESCE(customer_email, ?)
+         WHERE stripe_payment_intent_id = ?`,
+        [pi.receipt_email || null, pi.id]
+      );
+      if (existing[0].user_id) {
+        await conn.query(
+          "UPDATE users SET plan = 'lifetime' WHERE id = ?",
+          [existing[0].user_id]
+        );
+      }
+      await conn.commit();
+    } catch (err) {
+      await conn.rollback();
+      throw err;
+    } finally {
+      conn.release();
+    }
+    return res.json({ status: "succeeded", downloadToken: null, kind: "lifetime" });
+  }
+
+  // ---- one-time path: issue a download token ----
   const token = crypto.randomBytes(32).toString("hex");
   await pool.query(
     `UPDATE payments
@@ -130,7 +210,7 @@ router.post("/confirm-payment", async (req, res) => {
     "SELECT download_token FROM payments WHERE stripe_payment_intent_id = ?",
     [paymentIntentId]
   );
-  res.json({ status: "succeeded", downloadToken: refreshed[0].download_token });
+  res.json({ status: "succeeded", downloadToken: refreshed[0].download_token, kind: "one_time" });
 });
 
 export default router;
