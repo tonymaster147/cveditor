@@ -3,11 +3,21 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import AuthCard, { FormField, SubmitButton, ErrorBox } from "./AuthCard";
 
+// Same priority as SignupPage: router state.from > sessionStorage > /dashboard.
+function popPostAuthRedirect(stateFrom) {
+  if (stateFrom) return stateFrom;
+  const stashed = sessionStorage.getItem("cv_after_auth_redirect");
+  if (stashed) {
+    sessionStorage.removeItem("cv_after_auth_redirect");
+    return stashed;
+  }
+  return "/dashboard";
+}
+
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const { state } = useLocation();
-  const redirectTo = state?.from || "/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +30,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate(redirectTo, { replace: true });
+      navigate(popPostAuthRedirect(state?.from), { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -32,7 +42,7 @@ export default function LoginPage() {
     <AuthCard
       title="Welcome back"
       subtitle="Log in to access your dashboard."
-      footer={<>Don't have an account? <Link to="/signup" className="font-semibold text-amber-600 hover:underline">Sign up</Link></>}
+      footer={<>Don't have an account? <Link to="/signup" state={state} className="font-semibold text-amber-600 hover:underline">Sign up</Link></>}
     >
       <form onSubmit={onSubmit} className="space-y-4">
         <FormField label="Email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { TEMPLATES } from "../../templates/registry";
 import { useAuth } from "../../auth/AuthContext";
 import CheckoutLayout from "./CheckoutLayout";
@@ -156,13 +156,19 @@ export default function ChoosePlanPage() {
           {!user && (
             <div className="mt-3 text-center text-xs text-gray-400">
               Already have an account?{" "}
-              <Link
-                to="/login"
-                state={{ from: `/checkout/${templateId}` }}
+              <button
+                type="button"
+                onClick={() => {
+                  // User picked lifetime then clicked Log in — mirror what pickLifetime
+                  // does so we return to the payment page in lifetime mode after login.
+                  sessionStorage.setItem("cv_checkout_kind", "lifetime");
+                  sessionStorage.setItem("cv_after_auth_redirect", `/checkout/${templateId}/payment`);
+                  navigate("/login");
+                }}
                 className="text-amber-400 hover:underline font-semibold"
               >
                 Log in
-              </Link>
+              </button>
             </div>
           )}
         </div>

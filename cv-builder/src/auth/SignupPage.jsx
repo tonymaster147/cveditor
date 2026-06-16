@@ -1,11 +1,27 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import AuthCard, { FormField, SubmitButton, ErrorBox } from "./AuthCard";
+
+// Where to send the user after a successful signup. Priority:
+//   1. router state.from (set by ProtectedRoute or explicit Link navigations)
+//   2. sessionStorage 'cv_after_auth_redirect' (set by ChoosePlanPage when
+//      a logged-out user picks the lifetime plan)
+//   3. fallback /dashboard
+function popPostAuthRedirect(stateFrom) {
+  if (stateFrom) return stateFrom;
+  const stashed = sessionStorage.getItem("cv_after_auth_redirect");
+  if (stashed) {
+    sessionStorage.removeItem("cv_after_auth_redirect");
+    return stashed;
+  }
+  return "/dashboard";
+}
 
 export default function SignupPage() {
   const { signup } = useAuth();
   const navigate = useNavigate();
+  const { state } = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -26,7 +42,7 @@ export default function SignupPage() {
     setLoading(true);
     try {
       await signup(email, password);
-      navigate("/dashboard", { replace: true });
+      navigate(popPostAuthRedirect(state?.from), { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -38,7 +54,7 @@ export default function SignupPage() {
     <AuthCard
       title="Create your account"
       subtitle="No email verification needed. You can reset your password any time."
-      footer={<>Already have an account? <Link to="/login" className="font-semibold text-amber-600 hover:underline">Log in</Link></>}
+      footer={<>Already have an account? <Link to="/login" state={state} className="font-semibold text-amber-600 hover:underline">Log in</Link></>}
     >
       <form onSubmit={onSubmit} className="space-y-4">
         <FormField label="Email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
