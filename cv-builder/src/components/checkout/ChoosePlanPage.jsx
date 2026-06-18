@@ -89,7 +89,7 @@ export default function ChoosePlanPage() {
         Choose your plan
       </h1>
       <p className="text-center text-gray-600 mb-8 sm:mb-10 px-4 text-sm sm:text-base">
-        Unlock instant download for the <span className="font-semibold">{template.name}</span> template — or pay once for everything.
+        Unlock instant download for the <span className="font-semibold">{template.name}</span> — or pay once for everything.
       </p>
 
       {error && (
@@ -103,16 +103,18 @@ export default function ChoosePlanPage() {
         <div className="bg-white rounded-2xl border-2 border-gray-200 p-6 sm:p-8 shadow-sm flex flex-col">
           <div className="text-xs font-bold tracking-wider text-gray-500 mb-2">ONE-TIME</div>
           <h2 className="text-lg sm:text-xl font-bold text-gray-900">Just this template</h2>
-          <p className="mt-1 text-sm text-gray-600">{template.tagline}</p>
+          <p className="mt-1 text-sm text-gray-600">
+            Get the <span className="font-semibold">{template.name}</span> CV, ready to send.
+          </p>
           <div className="mt-5 text-4xl font-extrabold text-gray-900">
             {oneTimePrice ? formatPrice(oneTimePrice.price_cents, oneTimePrice.currency) : "—"}
           </div>
           <div className="text-xs text-gray-500 mt-1">One-time payment</div>
 
           <ul className="mt-5 space-y-2 text-sm text-gray-700 flex-1">
-            <li className="flex gap-2"><span className="text-emerald-500">✓</span> Download as PDF and DOCX</li>
-            <li className="flex gap-2"><span className="text-emerald-500">✓</span> No watermark</li>
-            <li className="flex gap-2"><span className="text-emerald-500">✓</span> Re-edit any time in the editor</li>
+            <li className="flex gap-2"><span className="text-emerald-500">✓</span> Download as polished PDF and editable DOCX</li>
+            <li className="flex gap-2"><span className="text-emerald-500">✓</span> No watermark, ever</li>
+            <li className="flex gap-2"><span className="text-emerald-500">✓</span> Re-edit anytime in the editor</li>
             <li className="flex gap-2"><span className="text-emerald-500">✓</span> Re-download from this browser</li>
           </ul>
 
@@ -121,7 +123,9 @@ export default function ChoosePlanPage() {
             onClick={pickOneTime}
             className="mt-6 w-full py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold disabled:opacity-50"
           >
-            Continue with one-time
+            {oneTimePrice
+              ? `Get this template — ${formatPrice(oneTimePrice.price_cents, oneTimePrice.currency)}`
+              : "Get this template"}
           </button>
         </div>
 
@@ -132,17 +136,17 @@ export default function ChoosePlanPage() {
           </div>
           <div className="text-xs font-bold tracking-wider text-amber-400 mb-2">LIFETIME</div>
           <h2 className="text-lg sm:text-xl font-bold">All templates, forever</h2>
-          <p className="mt-1 text-sm text-gray-300">Unlimited downloads of every template, any format.</p>
+          <p className="mt-1 text-sm text-gray-300">Every template, every format — yours for good.</p>
           <div className="mt-5 text-4xl font-extrabold">
             {lifetimePrice ? formatPrice(lifetimePrice.priceCents, lifetimePrice.currency) : "—"}
           </div>
           <div className="text-xs text-gray-400 mt-1">One-time, never expires</div>
 
           <ul className="mt-5 space-y-2 text-sm text-gray-200 flex-1">
-            <li className="flex gap-2"><span className="text-amber-400">★</span> Every template, every format</li>
-            <li className="flex gap-2"><span className="text-amber-400">★</span> Unlimited downloads forever</li>
-            <li className="flex gap-2"><span className="text-amber-400">★</span> Account-based — log in any time</li>
-            <li className="flex gap-2"><span className="text-amber-400">★</span> Future templates included</li>
+            <li className="flex gap-2"><span className="text-amber-400">★</span> Unlimited downloads of every CV template</li>
+            <li className="flex gap-2"><span className="text-amber-400">★</span> PDF and DOCX, no watermarks</li>
+            <li className="flex gap-2"><span className="text-amber-400">★</span> Account-based — log in from any device</li>
+            <li className="flex gap-2"><span className="text-amber-400">★</span> All future templates included free</li>
           </ul>
 
           <button
@@ -150,7 +154,9 @@ export default function ChoosePlanPage() {
             onClick={pickLifetime}
             className="mt-6 w-full py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold disabled:opacity-50"
           >
-            {user ? "Continue with lifetime" : "Sign up & get lifetime"}
+            {lifetimePrice
+              ? `Get lifetime access — ${formatPrice(lifetimePrice.priceCents, lifetimePrice.currency)}`
+              : "Get lifetime access"}
           </button>
 
           {!user && (
