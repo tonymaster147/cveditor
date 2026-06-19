@@ -1,10 +1,16 @@
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /cv-editor/
+# iCover CV builder — WPX static SPA config
+# Lives at /cv-editor/ on the chrooted SFTP user.
 
-  RewriteRule ^index\.html$ - [L]
+RewriteEngine On
 
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /cv-editor/index.html [L]
-</IfModule>
+# 1) Force www: any request to icover.org.uk/cv-editor/* (no www)
+#    301-redirects to www.icover.org.uk/cv-editor/*, preserving the path.
+RewriteCond %{HTTP_HOST} ^icover\.org\.uk$ [NC]
+RewriteRule ^(.*)$ https://www.icover.org.uk/cv-editor/$1 [R=301,L]
+
+# 2) SPA fallback: serve index.html for any path that doesn't match a real
+#    file or directory. Lets React Router routes like /edit/:id, /dashboard,
+#    /verify-email survive a hard refresh.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
