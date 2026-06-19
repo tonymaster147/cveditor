@@ -89,7 +89,7 @@ export default function ChoosePlanPage() {
         Choose your plan
       </h1>
       <p className="text-center text-gray-600 mb-8 sm:mb-10 px-4 text-sm sm:text-base">
-        Unlock instant download for the <span className="font-semibold">{template.name}</span> — or pay once for everything.
+        Download your finished CV now — or get lifetime access to every template.
       </p>
 
       {error && (
