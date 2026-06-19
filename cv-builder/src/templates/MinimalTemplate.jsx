@@ -1,4 +1,5 @@
 import Editable from "../components/Editable";
+import { useIsThumbnail } from "./ThumbnailContext";
 import EditableList from "../components/EditableList";
 import { makeBlocks } from "./blockHelpers";
 
@@ -54,11 +55,12 @@ export default function MinimalTemplate({ data, update, accent }) {
 }
 
 function Sec({ title, accent, children }) {
+  const Tag = useIsThumbnail() ? "div" : "h2";
   return (
     <section className="mb-6">
-      <h2 className="text-[10px] font-medium uppercase tracking-[0.3em] mb-3" style={{ color: accent }}>
+      <Tag className="text-[10px] font-medium uppercase tracking-[0.3em] mb-3" style={{ color: accent }}>
         {title}
-      </h2>
+      </Tag>
       {children}
     </section>
   );

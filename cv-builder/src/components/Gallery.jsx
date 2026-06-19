@@ -4,6 +4,7 @@ import { TEMPLATES } from "../templates/registry";
 import { initialData } from "../data/initialData";
 import { TESTIMONIALS } from "../data/testimonials";
 import { useAuth } from "../auth/AuthContext";
+import { ThumbnailProvider } from "../templates/ThumbnailContext";
 import logoUrl from "../assets/Icover-Org-Uk.webp";
 
 const PAGE_W = 794;
@@ -56,9 +57,9 @@ export default function Gallery() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <header className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <img src={logoUrl} alt="iCover" className="h-7 sm:h-9 w-auto" />
-          </Link>
+          <a href="/cv-editor/" className="flex items-center gap-2 flex-shrink-0">
+            <img src={logoUrl} alt="iCover" width={108} height={36} className="h-7 sm:h-9 w-auto" />
+          </a>
           <div className="flex items-center gap-3">
             <div className="hidden md:block text-sm text-gray-500">No CV data stored · Free</div>
             {!authLoading && (
@@ -285,9 +286,13 @@ function LogoStrip() {
                 key={`${l.name}-${idx}`}
                 src={l.src}
                 alt={l.name}
+                width={140}
+                height={48}
                 aria-hidden={idx >= LOGOS.length ? "true" : undefined}
                 className="h-8 sm:h-10 md:h-12 w-auto object-contain grayscale hover:grayscale-0 transition mx-6 sm:mx-10 flex-shrink-0"
                 draggable={false}
+                loading="lazy"
+                decoding="async"
               />
             ))}
           </div>
@@ -397,12 +402,14 @@ function TemplateCard({ template }) {
             transformOrigin: "top left",
           }}
         >
-          <Tmpl
-            data={initialData}
-            update={() => {}}
-            accent={template.defaultAccent}
-            isThumbnail
-          />
+          <ThumbnailProvider>
+            <Tmpl
+              data={initialData}
+              update={() => {}}
+              accent={template.defaultAccent}
+              isThumbnail
+            />
+          </ThumbnailProvider>
         </div>
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition" />
       </div>

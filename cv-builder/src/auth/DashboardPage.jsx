@@ -24,9 +24,9 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+          <a href="/cv-editor/" className="flex items-center gap-2 flex-shrink-0">
             <img src={logoUrl} alt="iCover" className="h-7 sm:h-9 w-auto" />
-          </Link>
+          </a>
           <div className="flex items-center gap-3">
             <span className="hidden sm:inline text-sm text-gray-600">{user.email}</span>
             <button
@@ -49,9 +49,9 @@ export default function DashboardPage() {
             <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Plan</div>
             <div className="mt-2 text-lg font-bold text-gray-900">{planLabel}</div>
             {user.plan === "none" && (
-              <Link to="/" className="mt-3 inline-block text-sm font-semibold text-amber-600 hover:underline">
+              <a href="/cv-editor/" className="mt-3 inline-block text-sm font-semibold text-amber-600 hover:underline">
                 Browse templates →
-              </Link>
+              </a>
             )}
           </div>
           <div className="bg-white rounded-xl border border-gray-200 p-5">

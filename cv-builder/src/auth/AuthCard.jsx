@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import logoUrl from "../assets/Icover-Org-Uk.webp";
 
 // Shared shell for login/signup/forgot/reset pages.
@@ -7,9 +6,9 @@ export default function AuthCard({ title, subtitle, children, footer }) {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col">
       <header className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          <Link to="/" className="inline-flex items-center">
+          <a href="/cv-editor/" className="inline-flex items-center">
             <img src={logoUrl} alt="iCover" className="h-7 sm:h-9 w-auto" />
-          </Link>
+          </a>
         </div>
       </header>
 

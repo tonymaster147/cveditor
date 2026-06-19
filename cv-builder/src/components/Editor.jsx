@@ -78,9 +78,9 @@ export default function Editor() {
       <header className="bg-white border-b shadow-sm sticky top-0 z-10">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center">
+            <a href="/cv-editor/" className="flex items-center">
               <img src={logoUrl} alt="iCover" className="h-8 w-auto" />
-            </Link>
+            </a>
             <Link
               to="/"
               className="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1"

@@ -1,4 +1,5 @@
 import Editable from "../components/Editable";
+import { useIsThumbnail } from "./ThumbnailContext";
 import EditableList from "../components/EditableList";
 import { makeBlocks } from "./blockHelpers";
 
@@ -91,11 +92,12 @@ export default function DoubleColumnTemplate({ data, update, accent }) {
 }
 
 function Sec({ title, accent, children }) {
+  const Tag = useIsThumbnail() ? "div" : "h2";
   return (
     <section className="mb-4">
-      <h2 className="text-xs font-bold uppercase tracking-widest pb-1 mb-2 border-b" style={{ color: accent, borderColor: accent }}>
+      <Tag className="text-xs font-bold uppercase tracking-widest pb-1 mb-2 border-b" style={{ color: accent, borderColor: accent }}>
         {title}
-      </h2>
+      </Tag>
       {children}
     </section>
   );

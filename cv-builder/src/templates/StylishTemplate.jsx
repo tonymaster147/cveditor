@@ -1,4 +1,5 @@
 import Editable from "../components/Editable";
+import { useIsThumbnail } from "./ThumbnailContext";
 import EditableList from "../components/EditableList";
 import { makeBlocks } from "./blockHelpers";
 
@@ -98,11 +99,12 @@ export default function StylishTemplate({ data, update, accent }) {
 }
 
 function Block({ title, accent, children }) {
+  const Tag = useIsThumbnail() ? "div" : "h2";
   return (
     <section className="mb-5">
-      <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: accent }}>
+      <Tag className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: accent }}>
         {title}
-      </h2>
+      </Tag>
       {children}
     </section>
   );

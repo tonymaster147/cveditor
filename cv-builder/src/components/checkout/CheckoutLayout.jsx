@@ -39,9 +39,9 @@ export default function CheckoutLayout({ activeStep, children, onClose }) {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center">
+          <a href="/cv-editor/" className="flex items-center">
             <img src={logoUrl} alt="iCover" className="h-8 w-auto" />
-          </Link>
+          </a>
 
           <div className="hidden md:flex items-center gap-4 flex-1 justify-center max-w-2xl">
             {STEPS.map((s, i) => {
