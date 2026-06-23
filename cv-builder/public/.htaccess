@@ -1,21 +1,16 @@
 # iCover CV builder — WPX static SPA config
-# Lives at /cv-editor/ on the chrooted SFTP user.
+# Lives at the document root of cv-editor.icover.org.uk.
 
 RewriteEngine On
 
-# 1) Force www: any request to icover.org.uk/cv-editor/* (no www)
-#    301-redirects to www.icover.org.uk/cv-editor/*, preserving the path.
-RewriteCond %{HTTP_HOST} ^icover\.org\.uk$ [NC]
-RewriteRule ^(.*)$ https://www.icover.org.uk/cv-editor/$1 [R=301,L]
-
-# 2) SPA fallback: serve index.html for any path that doesn't match a real
+# 1) SPA fallback: serve index.html for any path that doesn't match a real
 #    file or directory. Lets React Router routes like /edit/:id, /dashboard,
 #    /verify-email survive a hard refresh.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [L]
 
-# 3) Caching. Hashed assets (Vite renames JS/CSS/images per build) get the
+# 2) Caching. Hashed assets (Vite renames JS/CSS/images per build) get the
 #    longest possible cache. index.html stays fresh so users pick up new
 #    bundle hashes as soon as we redeploy.
 <IfModule mod_expires.c>

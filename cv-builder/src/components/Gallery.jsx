@@ -57,7 +57,7 @@ export default function Gallery() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <header className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
-          <a href="/cv-editor/" className="flex items-center gap-2 flex-shrink-0">
+          <a href="/" className="flex items-center gap-2 flex-shrink-0">
             <img src={logoUrl} alt="iCover" width={108} height={36} className="h-7 sm:h-9 w-auto" />
           </a>
           <div className="flex items-center gap-3">
@@ -91,7 +91,7 @@ export default function Gallery() {
       {/* HERO */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-14 pb-8 text-center">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
-          Free CV Builder: Create a Professional CV Online in Minutes
+          Professional CV Builder: Create a Standout CV Online in Minutes
         </h1>
         <p className="mt-3 sm:mt-4 text-gray-600 max-w-2xl mx-auto text-sm sm:text-base md:text-lg px-2">
           Choose from professionally designed templates by UK CV writers. Customise colours,

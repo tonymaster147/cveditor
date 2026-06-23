@@ -19,7 +19,7 @@ import DashboardPage from "./auth/DashboardPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter basename="/cv-editor">
+    <BrowserRouter>
       <AuthProvider>
         <ScrollToTop />
         <Routes>

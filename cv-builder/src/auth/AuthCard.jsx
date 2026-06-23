@@ -6,7 +6,7 @@ export default function AuthCard({ title, subtitle, children, footer }) {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col">
       <header className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          <a href="/cv-editor/" className="inline-flex items-center">
+          <a href="/" className="inline-flex items-center">
             <img src={logoUrl} alt="iCover" className="h-7 sm:h-9 w-auto" />
           </a>
         </div>
