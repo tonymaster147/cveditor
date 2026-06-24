@@ -55,4 +55,5 @@ export const factories = {
     text: "Short description of what the course covered.",
   }),
   language: () => ({ name: "Language", level: "Level" }),
+  reference: () => ({ name: "Reference Name", role: "Role / Company", phone: "+44 20 0000 0000", email: "name@example.com" }),
 };

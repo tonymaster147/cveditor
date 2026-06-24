@@ -29,5 +29,6 @@ export function makeBlocks(data, update) {
     achievements: (render) => renderArr("achievements", factories.achievement, render, "+ Add achievement"),
     courses: (render) => renderArr("courses", factories.course, render, "+ Add course"),
     languages: (render) => renderArr("languages", factories.language, render, "+ Add language"),
+    references: (render) => renderArr("references", factories.reference, render, "+ Add reference"),
   };
 }

@@ -10,6 +10,9 @@ import TimelineTemplate from "./TimelineTemplate";
 import ElegantTemplate from "./ElegantTemplate";
 import PhotoSidebarTemplate from "./PhotoSidebarTemplate";
 import PhotoHeaderTemplate from "./PhotoHeaderTemplate";
+import PastelStudioTemplate from "./PastelStudioTemplate";
+import MonogramSerifTemplate from "./MonogramSerifTemplate";
+import CenteredProTemplate from "./CenteredProTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -24,4 +27,7 @@ export const TEMPLATES = [
   { id: "bold", name: "Bold Header", tagline: "Full-width colored masthead.", defaultAccent: "#ef4444", component: BoldHeaderTemplate },
   { id: "timeline", name: "Timeline", tagline: "Visual experience timeline.", defaultAccent: "#8b5cf6", component: TimelineTemplate },
   { id: "elegant", name: "Elegant", tagline: "Centered serif, refined and formal.", defaultAccent: "#0ea5e9", component: ElegantTemplate },
+  { id: "pastel-studio", name: "Pastel Studio", tagline: "Soft pastel sidebar with photo, designer feel.", defaultAccent: "#c2685a", component: PastelStudioTemplate, hasPhoto: true },
+  { id: "monogram-serif", name: "Monogram Serif", tagline: "Initials in a circle, refined serif, includes references.", defaultAccent: "#6b6b6b", component: MonogramSerifTemplate, hasPhoto: true },
+  { id: "centered-pro", name: "Centered Pro", tagline: "Clean centered name, contact strip, single column.", defaultAccent: "#0f8a8d", component: CenteredProTemplate },
 ];

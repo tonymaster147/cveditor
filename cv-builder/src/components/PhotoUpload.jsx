@@ -10,7 +10,19 @@ import { useRef, useState, useEffect } from "react";
  *
  * onChange receives the same object shape (or "" when removed).
  */
-export default function PhotoUpload({ value, onChange, size = 110, shape = "circle" }) {
+export default function PhotoUpload({
+  value,
+  onChange,
+  size = 110,
+  shape = "circle",
+  // When no photo uploaded:
+  //   fallback="icon"     → grey person silhouette (default, existing behaviour)
+  //   fallback="monogram" → initials derived from `monogramText` in a circle
+  fallback = "icon",
+  monogramText = "",
+  monogramBg,
+  monogramFg,
+}) {
   const inputRef = useRef(null);
   const frameRef = useRef(null);
   const dragState = useRef(null);
@@ -112,6 +124,18 @@ export default function PhotoUpload({ value, onChange, size = 110, shape = "circ
               transformOrigin: "center",
             }}
           />
+        ) : fallback === "monogram" ? (
+          <div
+            className="w-full h-full flex items-center justify-center font-serif select-none"
+            style={{
+              background: monogramBg || "#e5e7eb",
+              color: monogramFg || "#374151",
+              fontSize: Math.round(size * 0.4),
+              letterSpacing: "0.05em",
+            }}
+          >
+            {(monogramText || "EM").slice(0, 2).toUpperCase()}
+          </div>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <svg viewBox="0 0 24 24" className="w-1/2 h-1/2 text-gray-400" fill="currentColor">

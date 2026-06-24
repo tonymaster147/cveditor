@@ -93,4 +93,8 @@ export const initialData = {
     { name: "English", level: "Native" },
     { name: "Spanish", level: "Advanced" },
   ],
+  references: [
+    { name: "Harumi Kobayashi", role: "Wardiere Inc. / CEO", phone: "+44 20 7123 4567", email: "harumi@example.com" },
+    { name: "Bailey Dupont",    role: "Wardiere Inc. / COO", phone: "+44 20 7123 4568", email: "bailey@example.com" },
+  ],
 };

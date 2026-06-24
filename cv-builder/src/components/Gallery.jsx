@@ -51,8 +51,15 @@ const scrollToTemplates = (e) => {
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
+const INITIAL_TEMPLATE_COUNT = 12;
+
 export default function Gallery() {
   const { user, loading: authLoading } = useAuth();
+  const [showAllTemplates, setShowAllTemplates] = useState(false);
+  const visibleTemplates = showAllTemplates
+    ? TEMPLATES
+    : TEMPLATES.slice(0, INITIAL_TEMPLATE_COUNT);
+  const hasMore = TEMPLATES.length > INITIAL_TEMPLATE_COUNT && !showAllTemplates;
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <header className="bg-white border-b shadow-sm">
@@ -131,10 +138,26 @@ export default function Gallery() {
           Choose an Editable CV Template
         </h2>
         <div className="flex flex-wrap justify-center gap-5 sm:gap-8">
-          {TEMPLATES.map((t) => (
+          {visibleTemplates.map((t) => (
             <TemplateCard key={t.id} template={t} />
           ))}
         </div>
+
+        {hasMore && (
+          <div className="mt-8 sm:mt-10 text-center">
+            <button
+              type="button"
+              onClick={() => setShowAllTemplates(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white font-semibold text-sm transition"
+            >
+              Load more templates
+              <span aria-hidden="true">↓</span>
+            </button>
+            <div className="mt-2 text-xs text-gray-500">
+              {TEMPLATES.length - INITIAL_TEMPLATE_COUNT} more available
+            </div>
+          </div>
+        )}
       </section>
 
       {/* HOW IT WORKS */}
