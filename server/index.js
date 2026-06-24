@@ -10,6 +10,7 @@ import webhookRoute from "./routes/webhook.js";
 import downloadRoute from "./routes/download.js";
 import emailRoute from "./routes/email.js";
 import authRoute from "./routes/auth.js";
+import parseCvRoute from "./routes/parseCv.js";
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use("/api", templatesRoute);
 app.use("/api", paymentRoute);
 app.use("/api", downloadRoute);
 app.use("/api", emailRoute);
+app.use("/api", parseCvRoute);
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 

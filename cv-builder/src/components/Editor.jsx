@@ -20,7 +20,21 @@ export default function Editor() {
     if (!currentTemplate) navigate("/", { replace: true });
   }, [currentTemplate, navigate]);
 
-  const [data, setData] = useState(initialData);
+  // Seed: if the chooser modal stashed parsed-CV data for this template,
+  // start from that; otherwise use the placeholder sample data. The key is
+  // template-scoped so opening template A then template B doesn't bleed.
+  const [data, setData] = useState(() => {
+    try {
+      const stashed = sessionStorage.getItem("cv_seed_data");
+      const stashedFor = sessionStorage.getItem("cv_seed_template");
+      if (stashed && stashedFor === templateId) {
+        sessionStorage.removeItem("cv_seed_data");
+        sessionStorage.removeItem("cv_seed_template");
+        return mergeWithInitial(JSON.parse(stashed));
+      }
+    } catch { /* fall through to placeholder */ }
+    return initialData;
+  });
   const [accent, setAccent] = useState(currentTemplate?.defaultAccent || "#10b981");
   const [format, setFormat] = useState("pdf");
   const [scale, setScale] = useState(1);
@@ -156,4 +170,22 @@ export default function Editor() {
 
     </div>
   );
+}
+
+// Fill any keys that the parser couldn't find with empty defaults from
+// initialData so templates that index into e.g. data.education don't crash
+// on undefined. Scalar fields default to "" if missing; arrays default to [].
+function mergeWithInitial(parsed) {
+  const merged = { ...initialData };
+  for (const key of Object.keys(initialData)) {
+    if (parsed[key] === undefined || parsed[key] === null) continue;
+    if (Array.isArray(initialData[key])) {
+      merged[key] = Array.isArray(parsed[key]) && parsed[key].length > 0
+        ? parsed[key]
+        : []; // empty array, not the placeholder sample data
+    } else {
+      merged[key] = parsed[key] || "";
+    }
+  }
+  return merged;
 }
