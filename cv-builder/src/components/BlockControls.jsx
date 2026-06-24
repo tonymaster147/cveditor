@@ -1,11 +1,16 @@
+import { useIsThumbnail } from "../templates/ThumbnailContext";
+
 /**
  * Hover-revealed delete button on a block, and an "+ Add" button below the list.
+ * In thumbnail mode (gallery cards) we omit the inner <button>s so we don't
+ * nest a button inside the card's outer <button> wrapper.
  */
 export function BlockWrap({ children, onDelete, className = "" }) {
+  const isThumbnail = useIsThumbnail();
   return (
     <div className={`relative group ${className}`}>
       {children}
-      {onDelete && (
+      {!isThumbnail && onDelete && (
         <button
           type="button"
           onClick={onDelete}
@@ -20,6 +25,8 @@ export function BlockWrap({ children, onDelete, className = "" }) {
 }
 
 export function AddBlockButton({ onClick, label = "+ Add block" }) {
+  const isThumbnail = useIsThumbnail();
+  if (isThumbnail) return null;
   return (
     <button
       type="button"

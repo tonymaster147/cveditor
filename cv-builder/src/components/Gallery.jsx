@@ -5,6 +5,7 @@ import { initialData } from "../data/initialData";
 import { TESTIMONIALS } from "../data/testimonials";
 import { useAuth } from "../auth/AuthContext";
 import { ThumbnailProvider } from "../templates/ThumbnailContext";
+import StartChooserModal from "./StartChooserModal";
 import logoUrl from "../assets/Icover-Org-Uk.webp";
 
 const PAGE_W = 794;
@@ -56,6 +57,7 @@ const INITIAL_TEMPLATE_COUNT = 12;
 export default function Gallery() {
   const { user, loading: authLoading } = useAuth();
   const [showAllTemplates, setShowAllTemplates] = useState(false);
+  const [pickedTemplate, setPickedTemplate] = useState(null);
   const visibleTemplates = showAllTemplates
     ? TEMPLATES
     : TEMPLATES.slice(0, INITIAL_TEMPLATE_COUNT);
@@ -139,7 +141,7 @@ export default function Gallery() {
         </h2>
         <div className="flex flex-wrap justify-center gap-5 sm:gap-8">
           {visibleTemplates.map((t) => (
-            <TemplateCard key={t.id} template={t} />
+            <TemplateCard key={t.id} template={t} onPick={() => setPickedTemplate(t)} />
           ))}
         </div>
 
@@ -276,6 +278,13 @@ export default function Gallery() {
       <footer className="text-center text-xs text-gray-500 py-6 border-t bg-white">
         © Copyright 2026 iCover
       </footer>
+
+      {pickedTemplate && (
+        <StartChooserModal
+          template={pickedTemplate}
+          onClose={() => setPickedTemplate(null)}
+        />
+      )}
     </div>
   );
 }
@@ -401,15 +410,16 @@ function TestimonialCarousel() {
   );
 }
 
-function TemplateCard({ template }) {
+function TemplateCard({ template, onPick }) {
   const Tmpl = template.component;
   // Card is a fixed THUMB_W wide and stacks vertically on narrow viewports
   // because the parent flex container wraps. The A4 page inside scales by a
   // constant SCALE so the thumbnail looks identical at all breakpoints.
   return (
-    <Link
-      to={`/edit/${template.id}`}
-      className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition overflow-hidden text-left block"
+    <button
+      type="button"
+      onClick={onPick}
+      className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition overflow-hidden text-left block focus:outline-none focus:ring-2 focus:ring-amber-500"
       style={{ width: THUMB_W, maxWidth: "100%" }}
     >
       <div
@@ -454,7 +464,7 @@ function TemplateCard({ template }) {
           />
         </div>
       </div>
-    </Link>
+    </button>
   );
 }
 

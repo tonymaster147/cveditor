@@ -1,9 +1,14 @@
 import Editable from "./Editable";
+import { useIsThumbnail } from "../templates/ThumbnailContext";
 
 /**
  * Editable list of plain string items with add/remove controls hidden during export.
+ * In thumbnail mode (gallery cards) we drop the inner <button> elements so we
+ * don't nest a button inside the card's outer <button> wrapper.
  */
 export default function EditableList({ items, onChange, className = "", itemClassName = "", bullet = "•" }) {
+  const isThumbnail = useIsThumbnail();
+
   const update = (i, v) => {
     const next = items.slice();
     next[i] = v;
@@ -24,20 +29,24 @@ export default function EditableList({ items, onChange, className = "", itemClas
             multiline
             className="flex-1 outline-none"
           />
-          <button
-            onClick={() => remove(i)}
-            className="no-export opacity-0 group-hover:opacity-100 text-red-500 text-xs px-1"
-            title="Remove"
-          >
-            ✕
-          </button>
+          {!isThumbnail && (
+            <button
+              onClick={() => remove(i)}
+              className="no-export opacity-0 group-hover:opacity-100 text-red-500 text-xs px-1"
+              title="Remove"
+            >
+              ✕
+            </button>
+          )}
         </li>
       ))}
-      <li className="no-export">
-        <button onClick={add} className="text-xs text-blue-600 hover:underline mt-1">
-          + Add item
-        </button>
-      </li>
+      {!isThumbnail && (
+        <li className="no-export">
+          <button onClick={add} className="text-xs text-blue-600 hover:underline mt-1">
+            + Add item
+          </button>
+        </li>
+      )}
     </ul>
   );
 }

@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { useIsThumbnail } from "../templates/ThumbnailContext";
 
 /**
  * Photo frame with upload, pan (drag), and zoom (wheel or slider).
@@ -27,6 +28,7 @@ export default function PhotoUpload({
   const frameRef = useRef(null);
   const dragState = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
+  const isThumbnail = useIsThumbnail();
 
   const photo = normalize(value);
   const hasPhoto = !!photo.src;
@@ -145,7 +147,7 @@ export default function PhotoUpload({
         )}
       </div>
 
-      {hasPhoto && (
+      {hasPhoto && !isThumbnail && (
         <>
           <button
             type="button"
