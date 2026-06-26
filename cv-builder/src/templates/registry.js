@@ -13,6 +13,9 @@ import PhotoHeaderTemplate from "./PhotoHeaderTemplate";
 import PastelStudioTemplate from "./PastelStudioTemplate";
 import MonogramSerifTemplate from "./MonogramSerifTemplate";
 import CenteredProTemplate from "./CenteredProTemplate";
+import CambridgeTemplate from "./CambridgeTemplate";
+import GreenwichTemplate from "./GreenwichTemplate";
+import ShoreditchTemplate from "./ShoreditchTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -30,4 +33,7 @@ export const TEMPLATES = [
   { id: "pastel-studio", name: "Pastel Studio", tagline: "Soft pastel sidebar with photo, designer feel.", defaultAccent: "#c2685a", component: PastelStudioTemplate, hasPhoto: true },
   { id: "monogram-serif", name: "Monogram Serif", tagline: "Initials in a circle, refined serif, includes references.", defaultAccent: "#6b6b6b", component: MonogramSerifTemplate, hasPhoto: true },
   { id: "centered-pro", name: "Centered Pro", tagline: "Clean centered name, contact strip, single column.", defaultAccent: "#0f8a8d", component: CenteredProTemplate },
+  { id: "cambridge", name: "Cambridge", tagline: "Clinical/professional, refined single column.", defaultAccent: "#2b63c4", component: CambridgeTemplate },
+  { id: "greenwich", name: "Greenwich", tagline: "Polished single column with soft bar headings.", defaultAccent: "#1a1a1a", component: GreenwichTemplate },
+  { id: "shoreditch", name: "Shoreditch", tagline: "Bold designer split with copper accents.", defaultAccent: "#b07d4e", component: ShoreditchTemplate },
 ];

@@ -4,175 +4,254 @@ import EditableList from "../components/EditableList";
 import PhotoUpload from "../components/PhotoUpload";
 import { makeBlocks } from "./blockHelpers";
 
-// Designer-leaning CV: pastel sidebar (photo + about + contact + skills +
-// languages), bigger right column for experience + education. Inspired by
-// soft pink/blush portfolio CVs.
-export default function PastelStudioTemplate({ data, update, accent }) {
+// "Template Rose" — designer / architect CV with a soft pink sidebar.
+// Mirrors the Claude Design source exactly (300px sidebar, framed photo,
+// white-plaque section headings, pink full-width bars on the right column).
+//
+// Colors are kept hardcoded (#f4dcd9 sidebar, #f0cfca rule, #b98a6e icons)
+// because the design's identity is the rose palette. The `accent` prop is
+// reserved for future use; changing the colour picker doesn't repaint the
+// sidebar in this template by design.
+
+const ROSE_BG = "#f4dcd9";
+const ROSE_RULE = "#f0cfca";
+const ICON = "#b98a6e";
+const HEADING_DARK = "#2b2b2b";
+const PLAQUE_DARK = "#2f2f2f";
+const BODY = "#4a4a4a";
+const MUTED = "#555555";
+
+const MONTSERRAT = "'Montserrat', sans-serif";
+
+export default function PastelStudioTemplate({ data, update /*, accent*/ }) {
   const blocks = makeBlocks(data, update);
-  // Soft pastel sidebar derived from accent so it doesn't fight the colour
-  // picker (the visible accent stays distinct from the sidebar tint).
-  const sidebar = "#F8E1DC"; // fixed pastel rose — matches the design language
 
   return (
-    <div className="cv-page font-sans text-[11px] leading-snug text-gray-800 flex">
-      {/* Left: pastel column */}
-      <aside className="w-[36%] p-7" style={{ background: sidebar }}>
-        <div className="flex justify-center mb-5">
-          <PhotoUpload value={data.photo} onChange={(v) => update(["photo"], v)} size={150} shape="circle" />
+    <div
+      className="cv-page flex"
+      style={{ fontFamily: MONTSERRAT, color: "#3a3a3a" }}
+    >
+      {/* LEFT SIDEBAR — 300px fixed */}
+      <aside
+        className="flex-none"
+        style={{ width: 300, background: ROSE_BG, padding: "0 26px 40px" }}
+      >
+        {/* Framed photo */}
+        <div
+          className="flex items-center justify-center"
+          style={{
+            margin: "34px 6px 0",
+            border: "3px solid #ffffff",
+            padding: "22px 0",
+          }}
+        >
+          <PhotoUpload
+            value={data.photo}
+            onChange={(v) => update(["photo"], v)}
+            size={158}
+            shape="circle"
+          />
         </div>
 
-        <SidebarSection title="About Me" accent={accent}>
-          <Editable
-            as="p"
-            value={data.summary}
-            onChange={(v) => update(["summary"], v)}
-            multiline
-            className="text-[10px] text-gray-700 leading-relaxed"
-          />
-        </SidebarSection>
+        <Plaque title="About Me" />
+        <Editable
+          as="p"
+          value={data.summary}
+          onChange={(v) => update(["summary"], v)}
+          multiline
+          style={{
+            fontSize: 13,
+            lineHeight: 1.55,
+            color: BODY,
+            margin: "16px 2px 0",
+          }}
+        />
 
-        <SidebarSection title="Contact" accent={accent}>
-          <div className="space-y-1.5 text-[10px] text-gray-800">
-            <div>📞 <Editable as="span" value={data.phone} onChange={(v) => update(["phone"], v)} /></div>
-            <div>✉ <Editable as="span" value={data.email} onChange={(v) => update(["email"], v)} /></div>
-            <div>🌐 <Editable as="span" value={data.linkedin} onChange={(v) => update(["linkedin"], v)} /></div>
-            <div>📍 <Editable as="span" value={data.location} onChange={(v) => update(["location"], v)} /></div>
-          </div>
-        </SidebarSection>
+        <Plaque title="Contact" mt={36} />
+        <div
+          className="flex flex-col"
+          style={{ marginTop: 18, gap: 14 }}
+        >
+          <ContactRow icon="✆">
+            <Editable as="span" value={data.phone} onChange={(v) => update(["phone"], v)} />
+          </ContactRow>
+          <ContactRow icon="✉">
+            <Editable as="span" value={data.email} onChange={(v) => update(["email"], v)} />
+          </ContactRow>
+          <ContactRow icon="🌐">
+            <Editable as="span" value={data.linkedin} onChange={(v) => update(["linkedin"], v)} />
+          </ContactRow>
+          <ContactRow icon="●" align="start">
+            <Editable as="span" value={data.location} onChange={(v) => update(["location"], v)} />
+          </ContactRow>
+        </div>
 
-        <SidebarSection title="Skills" accent={accent}>
-          <EditableList
-            items={data.skills}
-            onChange={(v) => update(["skills"], v)}
-            className="space-y-1 text-[10px] text-gray-800"
-            bullet="•"
-          />
-        </SidebarSection>
+        <Plaque title="Skills" mt={36} />
+        <EditableList
+          items={data.skills}
+          onChange={(v) => update(["skills"], v)}
+          className="pastel-list"
+          itemClassName="pastel-list-item"
+          bullet="•"
+        />
 
-        <SidebarSection title="Languages" accent={accent}>
+        <Plaque title="Languages" mt={32} />
+        <ul className="pastel-list">
           {blocks.languages((l, i) => (
-            <div className="mb-1 text-[10px] text-gray-800">
-              <Editable as="span" value={l.name} onChange={(v) => update(["languages", i, "name"], v)} className="font-semibold" />
-              {l.level && (
-                <>
-                  {" — "}
-                  <Editable as="span" value={l.level} onChange={(v) => update(["languages", i, "level"], v)} className="text-gray-600" />
-                </>
-              )}
-            </div>
+            <li key={i} className="pastel-list-item flex gap-2 items-start">
+              <span className="shrink-0">•</span>
+              <Editable as="span" value={l.name} onChange={(v) => update(["languages", i, "name"], v)} />
+            </li>
           ))}
-        </SidebarSection>
+        </ul>
+
+        <style>{`
+          .pastel-list { margin: 16px 0 0; padding-left: 6px; list-style: none; }
+          .pastel-list-item { font-size: 13px; line-height: 1.95; color: ${BODY}; }
+        `}</style>
       </aside>
 
-      {/* Right: main */}
-      <div className="flex-1 p-9">
+      {/* RIGHT MAIN */}
+      <div className="flex-1 box-border" style={{ padding: "64px 44px 40px" }}>
         <Editable
           as="h1"
           value={data.name}
           onChange={(v) => update(["name"], v)}
-          className="text-4xl font-extrabold uppercase tracking-wide text-gray-900"
+          className="m-0 text-right"
+          style={{
+            fontSize: 46,
+            fontWeight: 800,
+            letterSpacing: 1,
+            color: HEADING_DARK,
+            lineHeight: 1,
+          }}
         />
-        <div className="mt-2 mb-1 h-px w-full" style={{ background: accent + "55" }} />
+        <div style={{ height: 3, background: ROSE_RULE, margin: "18px 0 16px" }} />
         <Editable
           as="div"
           value={data.role}
           onChange={(v) => update(["role"], v)}
-          className="text-[11px] uppercase tracking-[0.25em]"
-          style={{ color: accent }}
+          className="text-center uppercase"
+          style={{
+            letterSpacing: 7,
+            fontSize: 17,
+            fontWeight: 600,
+            color: "#3a3a3a",
+          }}
         />
 
-        <MainSection title="Work Experience" accent={accent}>
-          {blocks.experience((exp, i) => (
-            <div className="mb-3">
-              <Editable
-                as="h3"
-                value={exp.title}
-                onChange={(v) => update(["experience", i, "title"], v)}
-                className="text-[12px] font-bold uppercase tracking-wide text-gray-900"
-              />
-              <div className="flex justify-between items-baseline">
-                <Editable
-                  as="span"
-                  value={exp.company}
-                  onChange={(v) => update(["experience", i, "company"], v)}
-                  className="font-semibold"
-                  style={{ color: accent }}
-                />
-                <Editable
-                  as="span"
-                  value={exp.date}
-                  onChange={(v) => update(["experience", i, "date"], v)}
-                  className="text-[10px] text-gray-600"
-                />
-              </div>
-              <EditableList
-                items={exp.bullets}
-                onChange={(v) => update(["experience", i, "bullets"], v)}
-                className="mt-1 space-y-0.5 text-[10px]"
-                bullet="•"
-              />
-            </div>
-          ))}
-        </MainSection>
+        <BarHeading title="Work Experience" mt={46} />
+        {blocks.experience((exp, i) => (
+          <div style={{ marginTop: 24 }}>
+            <Editable
+              as="h3"
+              value={exp.title}
+              onChange={(v) => update(["experience", i, "title"], v)}
+              className="uppercase"
+              style={{ fontWeight: 700, fontSize: 16, color: HEADING_DARK }}
+            />
+            <Editable
+              as="div"
+              value={exp.company}
+              onChange={(v) => update(["experience", i, "company"], v)}
+              style={{ fontWeight: 700, fontSize: 14, marginTop: 7, color: HEADING_DARK }}
+            />
+            <Editable
+              as="div"
+              value={exp.date}
+              onChange={(v) => update(["experience", i, "date"], v)}
+              style={{ fontSize: 13, color: MUTED, marginTop: 7 }}
+            />
+            {/* Bullets render as a single paragraph (matching design) — join with line breaks */}
+            <EditableList
+              items={exp.bullets}
+              onChange={(v) => update(["experience", i, "bullets"], v)}
+              className="mt-2"
+              bullet="•"
+            />
+          </div>
+        ))}
 
-        <MainSection title="Education" accent={accent}>
-          {blocks.education((ed, i) => (
-            <div className="mb-2">
-              <Editable
-                as="h3"
-                value={ed.degree}
-                onChange={(v) => update(["education", i, "degree"], v)}
-                className="text-[12px] font-bold uppercase tracking-wide text-gray-900"
-              />
-              <div className="flex justify-between items-baseline">
-                <Editable
-                  as="div"
-                  value={ed.school}
-                  onChange={(v) => update(["education", i, "school"], v)}
-                  className="font-semibold"
-                  style={{ color: accent }}
-                />
-                <Editable
-                  as="div"
-                  value={ed.date}
-                  onChange={(v) => update(["education", i, "date"], v)}
-                  className="text-[10px] text-gray-600"
-                />
-              </div>
-            </div>
-          ))}
-        </MainSection>
+        <BarHeading title="Education" mt={36} />
+        {blocks.education((ed, i) => (
+          <div style={{ marginTop: 22 }}>
+            <Editable
+              as="h3"
+              value={ed.degree}
+              onChange={(v) => update(["education", i, "degree"], v)}
+              className="uppercase"
+              style={{ fontWeight: 700, fontSize: 15, color: HEADING_DARK }}
+            />
+            <Editable
+              as="div"
+              value={ed.school}
+              onChange={(v) => update(["education", i, "school"], v)}
+              style={{ fontSize: 13, color: BODY, marginTop: 6 }}
+            />
+            <Editable
+              as="div"
+              value={ed.date}
+              onChange={(v) => update(["education", i, "date"], v)}
+              style={{ fontSize: 13, color: MUTED, marginTop: 6 }}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-function MainSection({ title, accent, children }) {
+// "White plaque" sidebar heading: centered, tracked-out caps in a white bar.
+function Plaque({ title, mt = 40 }) {
   const Tag = useIsThumbnail() ? "div" : "h2";
   return (
-    <section className="mt-6">
-      <Tag
-        className="text-[11px] font-bold uppercase tracking-[0.25em] px-3 py-1 mb-3 inline-block w-full"
-        style={{ background: accent + "22", color: accent }}
-      >
-        {title}
-      </Tag>
-      {children}
-    </section>
+    <Tag
+      style={{
+        background: "#ffffff",
+        textAlign: "center",
+        padding: "7px 0",
+        marginTop: mt,
+        fontWeight: 700,
+        letterSpacing: 3,
+        fontSize: 17,
+        color: PLAQUE_DARK,
+      }}
+    >
+      {title}
+    </Tag>
   );
 }
 
-function SidebarSection({ title, accent, children }) {
+// Full-width pink section bar on the right column ("WORK EXPERIENCE" etc.)
+function BarHeading({ title, mt }) {
   const Tag = useIsThumbnail() ? "div" : "h2";
   return (
-    <section className="mt-5 first:mt-0">
-      <Tag
-        className="text-[11px] font-bold uppercase tracking-[0.25em] mb-2 pb-1 border-b"
-        style={{ color: accent, borderColor: accent + "55" }}
-      >
-        {title}
-      </Tag>
-      {children}
-    </section>
+    <Tag
+      style={{
+        background: ROSE_BG,
+        padding: "9px 16px",
+        marginTop: mt,
+        fontWeight: 800,
+        letterSpacing: 1,
+        fontSize: 20,
+        color: HEADING_DARK,
+      }}
+    >
+      {title}
+    </Tag>
+  );
+}
+
+function ContactRow({ icon, align = "center", children }) {
+  return (
+    <div
+      className={align === "start" ? "flex items-start" : "flex items-center"}
+      style={{ gap: 14, fontSize: 13, color: BODY }}
+    >
+      <span style={{ color: ICON, fontSize: 16, lineHeight: align === "start" ? 1.4 : undefined }}>
+        {icon}
+      </span>
+      <span>{children}</span>
+    </div>
   );
 }

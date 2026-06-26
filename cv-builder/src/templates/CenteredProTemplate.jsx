@@ -3,34 +3,38 @@ import { useIsThumbnail } from "./ThumbnailContext";
 import EditableList from "../components/EditableList";
 import { makeBlocks } from "./blockHelpers";
 
-// Clean centered-name single-column CV. Big serif name at the top, contact
-// strip beneath, then full-width sections. Strong NHS / professional feel.
-// No photo. Looks great in teal/blue but works in any accent colour.
+// Centered single-column CV. Big serif teal name + contact strip in a grey
+// hero band; sections below with thin underlines, pipe-separated job
+// headers, bullet lists for skills and languages. NHS / clinical feel.
 export default function CenteredProTemplate({ data, update, accent }) {
   const blocks = makeBlocks(data, update);
 
   return (
     <div className="cv-page font-sans text-[11px] leading-snug text-gray-800">
-      {/* Centered hero */}
-      <header className="px-12 pt-9 pb-5 text-center" style={{ background: accent + "11" }}>
+      {/* HEADER — grey hero with centered name and contact row */}
+      <header className="px-12 pt-8 pb-5 text-center" style={{ background: "#EFEFEF" }}>
         <Editable
           as="h1"
           value={data.name}
           onChange={(v) => update(["name"], v)}
-          className="text-[42px] font-bold tracking-tight"
-          style={{ color: accent, fontFamily: "Georgia, serif" }}
+          className="text-[44px] font-bold tracking-tight"
+          style={{ color: accent, fontFamily: "Georgia, 'Times New Roman', serif", letterSpacing: "0.08em" }}
         />
-        <div className="mt-3 h-px w-full" style={{ background: accent + "44" }} />
-        <div className="mt-3 flex flex-wrap justify-center items-center gap-x-5 gap-y-1 text-[11px] text-gray-700">
-          <ContactPill icon="📞">
+
+        {/* Contact row in a horizontal line */}
+        <div className="mt-5 flex flex-wrap justify-center items-center gap-x-8 gap-y-2 text-[11px] text-gray-700 border-b" style={{ borderColor: accent }}>
+          <span className="pb-2 inline-flex items-center gap-1.5">
+            <span style={{ color: accent }}>📞</span>
             <Editable as="span" value={data.phone} onChange={(v) => update(["phone"], v)} />
-          </ContactPill>
-          <ContactPill icon="✉">
+          </span>
+          <span className="pb-2 inline-flex items-center gap-1.5">
+            <span style={{ color: accent }}>✉</span>
             <Editable as="span" value={data.email} onChange={(v) => update(["email"], v)} />
-          </ContactPill>
-          <ContactPill icon="📍">
+          </span>
+          <span className="pb-2 inline-flex items-center gap-1.5">
+            <span style={{ color: accent }}>📍</span>
             <Editable as="span" value={data.location} onChange={(v) => update(["location"], v)} />
-          </ContactPill>
+          </span>
         </div>
       </header>
 
@@ -41,7 +45,7 @@ export default function CenteredProTemplate({ data, update, accent }) {
             value={data.summary}
             onChange={(v) => update(["summary"], v)}
             multiline
-            className="text-[11px] text-gray-700 leading-relaxed"
+            className="text-[11px] text-gray-800 leading-relaxed"
           />
         </Section>
 
@@ -49,7 +53,7 @@ export default function CenteredProTemplate({ data, update, accent }) {
           <EditableList
             items={data.skills}
             onChange={(v) => update(["skills"], v)}
-            className="space-y-1 text-[11px] text-gray-800 grid grid-cols-2 gap-x-6"
+            className="grid grid-cols-2 gap-x-8 gap-y-1 text-[11px] text-gray-800"
             bullet="•"
           />
         </Section>
@@ -57,6 +61,7 @@ export default function CenteredProTemplate({ data, update, accent }) {
         <Section title="Professional Experience" accent={accent}>
           {blocks.experience((exp, i) => (
             <div className="mb-3">
+              {/* Pipe-separated header: Title | Company, Location | Date */}
               <div className="flex flex-wrap items-baseline gap-x-2 text-[12px]">
                 <Editable
                   as="h3"
@@ -69,32 +74,31 @@ export default function CenteredProTemplate({ data, update, accent }) {
                   as="span"
                   value={exp.company}
                   onChange={(v) => update(["experience", i, "company"], v)}
-                  className="font-bold"
-                  style={{ color: accent }}
+                  className="font-bold text-gray-900"
                 />
+                {exp.location && (
+                  <>
+                    <span>,</span>
+                    <Editable
+                      as="span"
+                      value={exp.location}
+                      onChange={(v) => update(["experience", i, "location"], v)}
+                      className="font-bold text-gray-900"
+                    />
+                  </>
+                )}
                 <span className="text-gray-400">|</span>
                 <Editable
                   as="span"
                   value={exp.date}
                   onChange={(v) => update(["experience", i, "date"], v)}
-                  className="text-gray-600 text-[11px]"
+                  className="text-gray-700"
                 />
-                {exp.location && (
-                  <>
-                    <span className="text-gray-400">|</span>
-                    <Editable
-                      as="span"
-                      value={exp.location}
-                      onChange={(v) => update(["experience", i, "location"], v)}
-                      className="text-gray-600 text-[11px] italic"
-                    />
-                  </>
-                )}
               </div>
               <EditableList
                 items={exp.bullets}
                 onChange={(v) => update(["experience", i, "bullets"], v)}
-                className="mt-1 space-y-0.5 text-[11px]"
+                className="mt-1.5 space-y-0.5 text-[11px] text-gray-800"
                 bullet="•"
               />
             </div>
@@ -103,29 +107,28 @@ export default function CenteredProTemplate({ data, update, accent }) {
 
         <Section title="Education & Qualifications" accent={accent}>
           {blocks.education((ed, i) => (
-            <div className="mb-2 text-[11px]">
-              <div className="flex flex-wrap items-baseline gap-x-2">
+            <div className="mb-1.5 text-[11px] flex gap-2">
+              <span style={{ color: accent }}>•</span>
+              <div>
                 <Editable
-                  as="h3"
+                  as="span"
                   value={ed.degree}
                   onChange={(v) => update(["education", i, "degree"], v)}
                   className="font-bold text-gray-900"
                 />
-                <span className="text-gray-400">|</span>
+                <span>: </span>
                 <Editable
                   as="span"
                   value={ed.school}
                   onChange={(v) => update(["education", i, "school"], v)}
-                  className="font-semibold"
-                  style={{ color: accent }}
+                  className="text-gray-800"
                 />
-                <span className="text-gray-400">|</span>
-                <Editable
-                  as="span"
-                  value={ed.date}
-                  onChange={(v) => update(["education", i, "date"], v)}
-                  className="text-gray-600"
-                />
+                {ed.date && (
+                  <>
+                    <span> </span>
+                    <span className="text-gray-700">(<Editable as="span" value={ed.date} onChange={(v) => update(["education", i, "date"], v)} />)</span>
+                  </>
+                )}
               </div>
             </div>
           ))}
@@ -136,12 +139,13 @@ export default function CenteredProTemplate({ data, update, accent }) {
             {blocks.languages((l, i) => (
               <li className="flex gap-2">
                 <span style={{ color: accent }}>•</span>
-                <Editable as="span" value={l.name} onChange={(v) => update(["languages", i, "name"], v)} className="font-semibold" />
+                <Editable as="span" value={l.name} onChange={(v) => update(["languages", i, "name"], v)} />
                 {l.level && (
-                  <>
-                    <span className="text-gray-400">—</span>
-                    <Editable as="span" value={l.level} onChange={(v) => update(["languages", i, "level"], v)} className="text-gray-600" />
-                  </>
+                  <span className="text-gray-700">
+                    {" ("}
+                    <Editable as="span" value={l.level} onChange={(v) => update(["languages", i, "level"], v)} />
+                    {")"}
+                  </span>
                 )}
               </li>
             ))}
@@ -152,27 +156,18 @@ export default function CenteredProTemplate({ data, update, accent }) {
   );
 }
 
-function ContactPill({ icon, children }) {
-  return (
-    <span className="inline-flex items-center gap-1">
-      <span>{icon}</span>
-      {children}
-    </span>
-  );
-}
-
 function Section({ title, accent, children }) {
   const Tag = useIsThumbnail() ? "div" : "h2";
   return (
     <section className="mb-5">
       <Tag
-        className="text-[14px] font-bold uppercase tracking-[0.15em] pb-1 mb-2 border-b-2"
-        style={{ color: accent, borderColor: accent }}
-        translate="no"
+        className="text-[14px] font-bold uppercase tracking-[0.15em] mb-3"
+        style={{ color: accent, fontFamily: "Georgia, 'Times New Roman', serif" }}
       >
         {title}
       </Tag>
       {children}
+      <div className="mt-4 h-px" style={{ background: accent + "55" }} />
     </section>
   );
 }

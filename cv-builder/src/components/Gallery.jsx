@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Link, useNavigationType } from "react-router-dom";
 import { TEMPLATES } from "../templates/registry";
 import { initialData } from "../data/initialData";
 import { TESTIMONIALS } from "../data/testimonials";
@@ -53,11 +53,60 @@ const scrollToTemplates = (e) => {
 };
 
 const INITIAL_TEMPLATE_COUNT = 12;
+const SCROLL_KEY = "gallery:scrollY";
+const SHOW_ALL_KEY = "gallery:showAll";
 
 export default function Gallery() {
   const { user, loading: authLoading } = useAuth();
-  const [showAllTemplates, setShowAllTemplates] = useState(false);
+  const navType = useNavigationType();
+  // Only hydrate from sessionStorage on browser back/forward (POP). A fresh
+  // visit (PUSH / direct URL / reload) always starts collapsed at scroll 0
+  // so the Load-More button is visible and users see the page from the top.
+  const isReturning = navType === "POP";
+
+  const [showAllTemplates, setShowAllTemplates] = useState(() => {
+    if (typeof window === "undefined" || !isReturning) return false;
+    return sessionStorage.getItem(SHOW_ALL_KEY) === "1";
+  });
   const [pickedTemplate, setPickedTemplate] = useState(null);
+  const restoredRef = useRef(false);
+
+  // Persist Load-More state whenever it changes so a later POP can restore it.
+  useEffect(() => {
+    sessionStorage.setItem(SHOW_ALL_KEY, showAllTemplates ? "1" : "0");
+  }, [showAllTemplates]);
+
+  // Persist scroll position continuously (rAF-throttled).
+  useEffect(() => {
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        sessionStorage.setItem(SCROLL_KEY, String(window.scrollY));
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // Restore scroll only on POP (back/forward). useLayoutEffect runs before
+  // paint, so the page never flashes at the top first.
+  useLayoutEffect(() => {
+    if (restoredRef.current || !isReturning) return;
+    const saved = sessionStorage.getItem(SCROLL_KEY);
+    if (saved != null) {
+      const y = parseInt(saved, 10);
+      if (!Number.isNaN(y) && y > 0) {
+        window.scrollTo({ top: y, left: 0, behavior: "instant" });
+      }
+    }
+    restoredRef.current = true;
+  }, [showAllTemplates, isReturning]);
+
   const visibleTemplates = showAllTemplates
     ? TEMPLATES
     : TEMPLATES.slice(0, INITIAL_TEMPLATE_COUNT);
