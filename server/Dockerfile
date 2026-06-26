@@ -7,7 +7,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
 # Copy application code
-COPY index.js db.js mailer.js auth.js ./
+COPY index.js db.js mailer.js auth.js cvParser.js ./
 COPY routes ./routes
 COPY backfill-customer-details.js ./
 
