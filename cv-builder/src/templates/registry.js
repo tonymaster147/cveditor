@@ -16,6 +16,9 @@ import CenteredProTemplate from "./CenteredProTemplate";
 import CambridgeTemplate from "./CambridgeTemplate";
 import GreenwichTemplate from "./GreenwichTemplate";
 import ShoreditchTemplate from "./ShoreditchTemplate";
+import WestminsterTemplate from "./WestminsterTemplate";
+import BristolTemplate from "./BristolTemplate";
+import EdinburghTemplate from "./EdinburghTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -36,4 +39,7 @@ export const TEMPLATES = [
   { id: "cambridge", name: "Cambridge", tagline: "Clinical/professional, refined single column.", defaultAccent: "#2b63c4", component: CambridgeTemplate },
   { id: "greenwich", name: "Greenwich", tagline: "Polished single column with soft bar headings.", defaultAccent: "#1a1a1a", component: GreenwichTemplate },
   { id: "shoreditch", name: "Shoreditch", tagline: "Bold designer split with copper accents.", defaultAccent: "#b07d4e", component: ShoreditchTemplate },
+  { id: "westminster", name: "Westminster", tagline: "Formal navy + gold, two-column authority.", defaultAccent: "#0f1f4b", component: WestminsterTemplate },
+  { id: "bristol", name: "Bristol", tagline: "Orange-accent single column, boxed contact.", defaultAccent: "#ea4b25", component: BristolTemplate },
+  { id: "edinburgh", name: "Edinburgh", tagline: "Blue block header, elegant rule headings.", defaultAccent: "#1a52c4", component: EdinburghTemplate },
 ];

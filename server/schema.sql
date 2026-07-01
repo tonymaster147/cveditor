@@ -51,5 +51,14 @@ INSERT INTO templates (id, name, price_cents, currency) VALUES
   ('executive',      'Executive Suite', 399, 'gbp'),
   ('bold',           'Bold Header',     399, 'gbp'),
   ('timeline',       'Timeline',        399, 'gbp'),
-  ('elegant',        'Elegant',         399, 'gbp')
+  ('elegant',        'Elegant',         399, 'gbp'),
+  ('pastel-studio',  'Pastel Studio',   399, 'gbp'),
+  ('monogram-serif', 'Monogram Serif',  399, 'gbp'),
+  ('centered-pro',   'Centered Pro',    399, 'gbp'),
+  ('cambridge',      'Cambridge',       399, 'gbp'),
+  ('greenwich',      'Greenwich',       399, 'gbp'),
+  ('shoreditch',     'Shoreditch',      399, 'gbp'),
+  ('westminster',    'Westminster',     399, 'gbp'),
+  ('bristol',        'Bristol',         399, 'gbp'),
+  ('edinburgh',      'Edinburgh',       399, 'gbp')
 ON DUPLICATE KEY UPDATE name = VALUES(name);
