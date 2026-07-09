@@ -53,8 +53,9 @@ const scrollToTemplates = (e) => {
 };
 
 const INITIAL_TEMPLATE_COUNT = 12;
+const LOAD_MORE_STEP = 6;
 const SCROLL_KEY = "gallery:scrollY";
-const SHOW_ALL_KEY = "gallery:showAll";
+const VISIBLE_COUNT_KEY = "gallery:visibleCount";
 
 export default function Gallery() {
   const { user, loading: authLoading } = useAuth();
@@ -64,17 +65,22 @@ export default function Gallery() {
   // so the Load-More button is visible and users see the page from the top.
   const isReturning = navType === "POP";
 
-  const [showAllTemplates, setShowAllTemplates] = useState(() => {
-    if (typeof window === "undefined" || !isReturning) return false;
-    return sessionStorage.getItem(SHOW_ALL_KEY) === "1";
+  // How many templates are visible in the grid. Grows by LOAD_MORE_STEP each
+  // click, so users progressively reveal the catalog rather than seeing all
+  // remaining templates dumped in at once.
+  const [visibleCount, setVisibleCount] = useState(() => {
+    if (typeof window === "undefined" || !isReturning) return INITIAL_TEMPLATE_COUNT;
+    const saved = parseInt(sessionStorage.getItem(VISIBLE_COUNT_KEY) || "", 10);
+    if (Number.isNaN(saved) || saved < INITIAL_TEMPLATE_COUNT) return INITIAL_TEMPLATE_COUNT;
+    return Math.min(saved, TEMPLATES.length);
   });
   const [pickedTemplate, setPickedTemplate] = useState(null);
   const restoredRef = useRef(false);
 
-  // Persist Load-More state whenever it changes so a later POP can restore it.
+  // Persist how many are revealed so a later POP restores the exact page state.
   useEffect(() => {
-    sessionStorage.setItem(SHOW_ALL_KEY, showAllTemplates ? "1" : "0");
-  }, [showAllTemplates]);
+    sessionStorage.setItem(VISIBLE_COUNT_KEY, String(visibleCount));
+  }, [visibleCount]);
 
   // Persist scroll position continuously (rAF-throttled).
   useEffect(() => {
@@ -105,12 +111,12 @@ export default function Gallery() {
       }
     }
     restoredRef.current = true;
-  }, [showAllTemplates, isReturning]);
+  }, [visibleCount, isReturning]);
 
-  const visibleTemplates = showAllTemplates
-    ? TEMPLATES
-    : TEMPLATES.slice(0, INITIAL_TEMPLATE_COUNT);
-  const hasMore = TEMPLATES.length > INITIAL_TEMPLATE_COUNT && !showAllTemplates;
+  const visibleTemplates = TEMPLATES.slice(0, visibleCount);
+  const hasMore = visibleCount < TEMPLATES.length;
+  const remaining = TEMPLATES.length - visibleCount;
+  const nextChunk = Math.min(LOAD_MORE_STEP, remaining);
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <header className="bg-white border-b shadow-sm">
@@ -198,14 +204,14 @@ export default function Gallery() {
           <div className="mt-8 sm:mt-10 text-center">
             <button
               type="button"
-              onClick={() => setShowAllTemplates(true)}
+              onClick={() => setVisibleCount((n) => Math.min(n + LOAD_MORE_STEP, TEMPLATES.length))}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white font-semibold text-sm transition"
             >
-              Load more templates
+              Load {nextChunk} more templates
               <span aria-hidden="true">↓</span>
             </button>
             <div className="mt-2 text-xs text-gray-500">
-              {TEMPLATES.length - INITIAL_TEMPLATE_COUNT} more available
+              {remaining} more available
             </div>
           </div>
         )}

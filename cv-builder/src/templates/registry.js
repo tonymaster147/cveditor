@@ -22,6 +22,9 @@ import EdinburghTemplate from "./EdinburghTemplate";
 import WindsorTemplate from "./WindsorTemplate";
 import YorkTemplate from "./YorkTemplate";
 import MayfairTemplate from "./MayfairTemplate";
+import ManchesterTemplate from "./ManchesterTemplate";
+import BathTemplate from "./BathTemplate";
+import BrightonTemplate from "./BrightonTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -48,4 +51,7 @@ export const TEMPLATES = [
   { id: "windsor", name: "Windsor", tagline: "Prestigious brown block header, classic two-column.", defaultAccent: "#8b4c10", component: WindsorTemplate },
   { id: "york", name: "York", tagline: "Cream background, Cormorant serif, timeline dots.", defaultAccent: "#7a4a21", component: YorkTemplate },
   { id: "mayfair", name: "Mayfair", tagline: "Playfair name, red-orange accents, executive feel.", defaultAccent: "#e8481c", component: MayfairTemplate },
+  { id: "manchester", name: "Manchester", tagline: "Navy header, corporate accounting resume.", defaultAccent: "#123047", component: ManchesterTemplate },
+  { id: "bath", name: "Bath", tagline: "Cream sidebar, rule-bordered contact bar.", defaultAccent: "#2b2b2b", component: BathTemplate },
+  { id: "brighton", name: "Brighton", tagline: "Vibrant gradient header, Playfair name.", defaultAccent: "#a24bd6", component: BrightonTemplate },
 ];
