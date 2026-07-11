@@ -25,6 +25,9 @@ import MayfairTemplate from "./MayfairTemplate";
 import ManchesterTemplate from "./ManchesterTemplate";
 import BathTemplate from "./BathTemplate";
 import BrightonTemplate from "./BrightonTemplate";
+import ChelseaTemplate from "./ChelseaTemplate";
+import KensingtonTemplate from "./KensingtonTemplate";
+import SohoTemplate from "./SohoTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -54,4 +57,7 @@ export const TEMPLATES = [
   { id: "manchester", name: "Manchester", tagline: "Navy header, corporate accounting resume.", defaultAccent: "#123047", component: ManchesterTemplate },
   { id: "bath", name: "Bath", tagline: "Cream sidebar, rule-bordered contact bar.", defaultAccent: "#2b2b2b", component: BathTemplate },
   { id: "brighton", name: "Brighton", tagline: "Vibrant gradient header, Playfair name.", defaultAccent: "#a24bd6", component: BrightonTemplate },
+  { id: "chelsea", name: "Chelsea", tagline: "Cyan header, timeline dots, blue footer.", defaultAccent: "#25a8e0", component: ChelseaTemplate },
+  { id: "kensington", name: "Kensington", tagline: "Wide-spaced name, dusty purple sidebar.", defaultAccent: "#6b6f9e", component: KensingtonTemplate },
+  { id: "soho", name: "Soho", tagline: "Stacked name, dark sidebar with cyan icons.", defaultAccent: "#25a8e0", component: SohoTemplate },
 ];
