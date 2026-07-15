@@ -28,6 +28,9 @@ import BrightonTemplate from "./BrightonTemplate";
 import ChelseaTemplate from "./ChelseaTemplate";
 import KensingtonTemplate from "./KensingtonTemplate";
 import SohoTemplate from "./SohoTemplate";
+import BelgraviaTemplate from "./BelgraviaTemplate";
+import MaryleboneTemplate from "./MaryleboneTemplate";
+import HampsteadTemplate from "./HampsteadTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -60,4 +63,7 @@ export const TEMPLATES = [
   { id: "chelsea", name: "Chelsea", tagline: "Cyan header, timeline dots, blue footer.", defaultAccent: "#25a8e0", component: ChelseaTemplate },
   { id: "kensington", name: "Kensington", tagline: "Wide-spaced name, dusty purple sidebar.", defaultAccent: "#6b6f9e", component: KensingtonTemplate },
   { id: "soho", name: "Soho", tagline: "Stacked name, dark sidebar with cyan icons.", defaultAccent: "#25a8e0", component: SohoTemplate },
+  { id: "belgravia", name: "Belgravia", tagline: "Minimal two-column, gold surname, rule-divided bands.", defaultAccent: "#c8a02e", component: BelgraviaTemplate },
+  { id: "marylebone", name: "Marylebone", tagline: "Blue-highlight name, icon contacts, dark footer bar.", defaultAccent: "#1c2b3a", component: MaryleboneTemplate },
+  { id: "hampstead", name: "Hampstead", tagline: "Espresso sidebar, skill bars, tan timeline.", defaultAccent: "#3d2b20", component: HampsteadTemplate },
 ];
