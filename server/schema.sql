@@ -72,5 +72,8 @@ INSERT INTO templates (id, name, price_cents, currency) VALUES
   ('soho',           'Soho',            399, 'gbp'),
   ('belgravia',      'Belgravia',       399, 'gbp'),
   ('marylebone',     'Marylebone',      399, 'gbp'),
-  ('hampstead',      'Hampstead',       399, 'gbp')
+  ('hampstead',      'Hampstead',       399, 'gbp'),
+  ('chester',        'Chester',         399, 'gbp'),
+  ('salisbury',      'Salisbury',       399, 'gbp'),
+  ('ascot',          'Ascot',           399, 'gbp')
 ON DUPLICATE KEY UPDATE name = VALUES(name);

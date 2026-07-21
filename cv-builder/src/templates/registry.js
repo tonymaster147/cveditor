@@ -31,6 +31,9 @@ import SohoTemplate from "./SohoTemplate";
 import BelgraviaTemplate from "./BelgraviaTemplate";
 import MaryleboneTemplate from "./MaryleboneTemplate";
 import HampsteadTemplate from "./HampsteadTemplate";
+import ChesterTemplate from "./ChesterTemplate";
+import SalisburyTemplate from "./SalisburyTemplate";
+import AscotTemplate from "./AscotTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -66,4 +69,7 @@ export const TEMPLATES = [
   { id: "belgravia", name: "Belgravia", tagline: "Minimal two-column, gold surname, rule-divided bands.", defaultAccent: "#c8a02e", component: BelgraviaTemplate },
   { id: "marylebone", name: "Marylebone", tagline: "Blue-highlight name, icon contacts, dark footer bar.", defaultAccent: "#1c2b3a", component: MaryleboneTemplate },
   { id: "hampstead", name: "Hampstead", tagline: "Espresso sidebar, skill bars, tan timeline.", defaultAccent: "#3d2b20", component: HampsteadTemplate },
+  { id: "chester", name: "Chester", tagline: "Classic navy + serif, bordered header card.", defaultAccent: "#2f5c8f", component: ChesterTemplate },
+  { id: "salisbury", name: "Salisbury", tagline: "Minimal beige, dark icon pills, timeline dates.", defaultAccent: "#2b2b2b", component: SalisburyTemplate },
+  { id: "ascot", name: "Ascot", tagline: "Bold consultant, lavender panel, chip badges.", defaultAccent: "#2a2a3f", component: AscotTemplate },
 ];
