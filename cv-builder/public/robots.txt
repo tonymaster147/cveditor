@@ -1,2 +1,12 @@
 User-agent: *
-Disallow: /
+Allow: /
+
+# Private / user-state / commercial-funnel pages — indexing them offers
+# no value and only creates thin duplicates.
+Disallow: /dashboard
+Disallow: /checkout/
+Disallow: /verify-email
+Disallow: /reset-password
+Disallow: /forgot-password
+
+Sitemap: https://cv-editor.icover.org.uk/sitemap.xml
