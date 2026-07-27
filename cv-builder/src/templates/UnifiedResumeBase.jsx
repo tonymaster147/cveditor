@@ -3,15 +3,16 @@ import { useIsThumbnail } from "./ThumbnailContext";
 import EditableList from "../components/EditableList";
 import { makeBlocks } from "./blockHelpers";
 
-// "Unified" design system, ported from the shared Claude Design source.
-// Three named registry entries (Islington / Dulwich / Richmond) all share
-// this component and pass in a `palette` — the visual system stays
-// consistent while ink/band/rule change per theme. Accent still comes
-// from the color picker so users can further tweak.
+// "Unified" resume base — Barlow, band header, section markers, thin
+// rules. Currently used by Islington. Dulwich and Richmond used to be
+// palette wrappers over this component, but their designs diverged so
+// they're now standalone. Kept as a shared base in case future palette
+// variations want to reuse the visual system.
 //
 // Layout: band header (name + role + underline bar + contact row), then
-// section stack: Summary / Skills 2-col / Education / Experience.
-// Each section heading uses a ↘ marker + tracked-out caps + thin rule.
+// section stack: Summary / Skills 2-col / Education + Certification 2-col
+// / Experience. Each section heading uses a ↘ marker + tracked-out caps
+// with a thin rule underneath.
 
 export default function UnifiedResumeBase({ data, update, accent, palette }) {
   const blocks = makeBlocks(data, update);

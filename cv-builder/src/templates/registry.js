@@ -75,7 +75,7 @@ export const TEMPLATES = [
   { id: "chester", name: "Chester", tagline: "Classic navy + serif, bordered header card.", defaultAccent: "#2f5c8f", component: ChesterTemplate },
   { id: "salisbury", name: "Salisbury", tagline: "Minimal beige, dark icon pills, timeline dates.", defaultAccent: "#2b2b2b", component: SalisburyTemplate },
   { id: "ascot", name: "Ascot", tagline: "Bold consultant, lavender panel, chip badges.", defaultAccent: "#2a2a3f", component: AscotTemplate },
-  { id: "islington", name: "Islington", tagline: "Teal-slate unified system, corporate and cool.", defaultAccent: "#2b7ba3", component: IslingtonTemplate },
-  { id: "dulwich", name: "Dulwich", tagline: "Warm sepia unified system, refined and editorial.", defaultAccent: "#8a6a3d", component: DulwichTemplate },
-  { id: "richmond", name: "Richmond", tagline: "Forest green unified system, grounded and considered.", defaultAccent: "#3f6b4f", component: RichmondTemplate },
+  { id: "islington", name: "Islington", tagline: "Barlow navy executive, band header, section markers.", defaultAccent: "#2b7ba3", component: IslingtonTemplate },
+  { id: "dulwich", name: "Dulwich", tagline: "Oswald teal on cream, bordered overlapping sidebar.", defaultAccent: "#3a7ca5", component: DulwichTemplate },
+  { id: "richmond", name: "Richmond", tagline: "Oswald monochrome, double border, dark contact spill.", defaultAccent: "#1c1c1c", component: RichmondTemplate },
 ];
