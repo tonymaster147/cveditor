@@ -131,11 +131,13 @@ export default function FulhamTemplate({ data, update /*, accent */ }) {
 
           <PillTitle text="Education Summary" accent mt={32} />
           <div style={{ marginTop: 18 }}>
-            {blocks.education((ed, i, arr) => (
+            {blocks.education((ed, i) => {
+              const isLast = i === (data.education || []).length - 1;
+              return (
               <div key={i} className="flex" style={{ gap: 12, marginTop: i === 0 ? 0 : 22 }}>
                 <div className="flex-none flex flex-col items-center" style={{ paddingTop: 6 }}>
                   <span style={{ width: 12, height: 12, borderRadius: "50%", background: DOT }} />
-                  {i < arr.length - 1 && (
+                  {!isLast && (
                     <span style={{ width: 2, flex: 1, background: DOT, marginTop: 4, minHeight: 30 }} />
                   )}
                 </div>
@@ -153,7 +155,8 @@ export default function FulhamTemplate({ data, update /*, accent */ }) {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
