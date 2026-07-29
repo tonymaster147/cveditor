@@ -37,6 +37,9 @@ import AscotTemplate from "./AscotTemplate";
 import IslingtonTemplate from "./IslingtonTemplate";
 import DulwichTemplate from "./DulwichTemplate";
 import RichmondTemplate from "./RichmondTemplate";
+import NottingTemplate from "./NottingTemplate";
+import FulhamTemplate from "./FulhamTemplate";
+import ChiswickTemplate from "./ChiswickTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -78,4 +81,7 @@ export const TEMPLATES = [
   { id: "islington", name: "Islington", tagline: "Barlow navy executive, band header, section markers.", defaultAccent: "#2b7ba3", component: IslingtonTemplate },
   { id: "dulwich", name: "Dulwich", tagline: "Oswald teal on cream, bordered overlapping sidebar.", defaultAccent: "#3a7ca5", component: DulwichTemplate },
   { id: "richmond", name: "Richmond", tagline: "Oswald monochrome, double border, dark contact spill.", defaultAccent: "#1c1c1c", component: RichmondTemplate },
+  { id: "notting", name: "Notting", tagline: "Warm beige Playfair header, dark icon contacts, skill bars.", defaultAccent: "#1a1a1a", component: NottingTemplate },
+  { id: "fulham", name: "Fulham", tagline: "Mint accent bar, callout brief, green-dot timeline.", defaultAccent: "#2f9e5f", component: FulhamTemplate },
+  { id: "chiswick", name: "Chiswick", tagline: "Minimal monochrome, split name, bordered role box.", defaultAccent: "#222222", component: ChiswickTemplate },
 ];
