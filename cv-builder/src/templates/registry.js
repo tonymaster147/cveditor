@@ -40,6 +40,9 @@ import RichmondTemplate from "./RichmondTemplate";
 import NottingTemplate from "./NottingTemplate";
 import FulhamTemplate from "./FulhamTemplate";
 import ChiswickTemplate from "./ChiswickTemplate";
+import HighgateTemplate from "./HighgateTemplate";
+import CamdenTemplate from "./CamdenTemplate";
+import RegentTemplate from "./RegentTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -84,4 +87,7 @@ export const TEMPLATES = [
   { id: "notting", name: "Notting", tagline: "Warm beige Playfair header, dark icon contacts, skill bars.", defaultAccent: "#1a1a1a", component: NottingTemplate },
   { id: "fulham", name: "Fulham", tagline: "Mint accent bar, callout brief, green-dot timeline.", defaultAccent: "#2f9e5f", component: FulhamTemplate },
   { id: "chiswick", name: "Chiswick", tagline: "Minimal monochrome, split name, bordered role box.", defaultAccent: "#222222", component: ChiswickTemplate },
+  { id: "highgate", name: "Highgate", tagline: "Grey chevron bars for role and dates, timeline experience.", defaultAccent: "#59595b", component: HighgateTemplate },
+  { id: "camden", name: "Camden", tagline: "Grey header, dark-circle icons, timeline with rating bars.", defaultAccent: "#1c1c1c", component: CamdenTemplate },
+  { id: "regent", name: "Regent", tagline: "Bold navy top block with yellow accents, split name.", defaultAccent: "#0b1533", component: RegentTemplate },
 ];
