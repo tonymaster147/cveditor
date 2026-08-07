@@ -43,6 +43,9 @@ import ChiswickTemplate from "./ChiswickTemplate";
 import HighgateTemplate from "./HighgateTemplate";
 import CamdenTemplate from "./CamdenTemplate";
 import RegentTemplate from "./RegentTemplate";
+import BarbicanTemplate from "./BarbicanTemplate";
+import PimlicoTemplate from "./PimlicoTemplate";
+import KewTemplate from "./KewTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -90,4 +93,7 @@ export const TEMPLATES = [
   { id: "highgate", name: "Highgate", tagline: "Grey chevron bars for role and dates, timeline experience.", defaultAccent: "#59595b", component: HighgateTemplate },
   { id: "camden", name: "Camden", tagline: "Grey header, dark-circle icons, timeline with rating bars.", defaultAccent: "#1c1c1c", component: CamdenTemplate },
   { id: "regent", name: "Regent", tagline: "Bold navy top block with yellow accents, split name.", defaultAccent: "#0b1533", component: RegentTemplate },
+  { id: "barbican", name: "Barbican", tagline: "Navy header with cream-gold name, sidebar + timeline main.", defaultAccent: "#1a4d7a", component: BarbicanTemplate },
+  { id: "pimlico", name: "Pimlico", tagline: "Minimal Jost, centered name, rule-divided label rows.", defaultAccent: "#111111", component: PimlicoTemplate },
+  { id: "kew", name: "Kew", tagline: "Cream editorial with circle header and double top rules.", defaultAccent: "#111111", component: KewTemplate },
 ];
