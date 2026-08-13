@@ -46,6 +46,9 @@ import RegentTemplate from "./RegentTemplate";
 import BarbicanTemplate from "./BarbicanTemplate";
 import PimlicoTemplate from "./PimlicoTemplate";
 import KewTemplate from "./KewTemplate";
+import ClaphamTemplate from "./ClaphamTemplate";
+import BatterseaTemplate from "./BatterseaTemplate";
+import HamptonTemplate from "./HamptonTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -96,4 +99,7 @@ export const TEMPLATES = [
   { id: "barbican", name: "Barbican", tagline: "Navy header with cream-gold name, sidebar + timeline main.", defaultAccent: "#1a4d7a", component: BarbicanTemplate },
   { id: "pimlico", name: "Pimlico", tagline: "Minimal Jost, centered name, rule-divided label rows.", defaultAccent: "#111111", component: PimlicoTemplate },
   { id: "kew", name: "Kew", tagline: "Cream editorial with circle header and double top rules.", defaultAccent: "#111111", component: KewTemplate },
+  { id: "clapham", name: "Clapham", tagline: "Navy top-stripe, pill-tag skills, corporate sidebar.", defaultAccent: "#3b6fe3", component: ClaphamTemplate },
+  { id: "battersea", name: "Battersea", tagline: "Pale blue with soft circles, navy pill headings.", defaultAccent: "#2471a4", component: BatterseaTemplate },
+  { id: "hampton", name: "Hampton", tagline: "Warm cream + tan, tracked Lora serif in burnt orange.", defaultAccent: "#b26e1c", component: HamptonTemplate },
 ];
