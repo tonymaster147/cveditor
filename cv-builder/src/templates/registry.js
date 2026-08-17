@@ -49,6 +49,9 @@ import KewTemplate from "./KewTemplate";
 import ClaphamTemplate from "./ClaphamTemplate";
 import BatterseaTemplate from "./BatterseaTemplate";
 import HamptonTemplate from "./HamptonTemplate";
+import EalingTemplate from "./EalingTemplate";
+import PeckhamTemplate from "./PeckhamTemplate";
+import HackneyTemplate from "./HackneyTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -102,4 +105,7 @@ export const TEMPLATES = [
   { id: "clapham", name: "Clapham", tagline: "Navy top-stripe, pill-tag skills, corporate sidebar.", defaultAccent: "#3b6fe3", component: ClaphamTemplate },
   { id: "battersea", name: "Battersea", tagline: "Pale blue with soft circles, navy pill headings.", defaultAccent: "#2471a4", component: BatterseaTemplate },
   { id: "hampton", name: "Hampton", tagline: "Warm cream + tan, tracked Lora serif in burnt orange.", defaultAccent: "#b26e1c", component: HamptonTemplate },
+  { id: "ealing", name: "Ealing", tagline: "Cream page with soft-beige circles, navy Montserrat rules.", defaultAccent: "#2f4d6e", component: EalingTemplate },
+  { id: "peckham", name: "Peckham", tagline: "Bordered-card look with red dots, Playfair pill titles.", defaultAccent: "#d5104f", component: PeckhamTemplate },
+  { id: "hackney", name: "Hackney", tagline: "Bold stacked Archivo name, rotated dates, blue skill bars.", defaultAccent: "#2360c0", component: HackneyTemplate },
 ];
