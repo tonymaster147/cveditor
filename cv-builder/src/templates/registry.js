@@ -52,6 +52,9 @@ import HamptonTemplate from "./HamptonTemplate";
 import EalingTemplate from "./EalingTemplate";
 import PeckhamTemplate from "./PeckhamTemplate";
 import HackneyTemplate from "./HackneyTemplate";
+import WhitechapelTemplate from "./WhitechapelTemplate";
+import WandsworthTemplate from "./WandsworthTemplate";
+import SuttonTemplate from "./SuttonTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -108,4 +111,7 @@ export const TEMPLATES = [
   { id: "ealing", name: "Ealing", tagline: "Cream page with soft-beige circles, navy Montserrat rules.", defaultAccent: "#2f4d6e", component: EalingTemplate },
   { id: "peckham", name: "Peckham", tagline: "Bordered-card look with red dots, Playfair pill titles.", defaultAccent: "#d5104f", component: PeckhamTemplate },
   { id: "hackney", name: "Hackney", tagline: "Bold stacked Archivo name, rotated dates, blue skill bars.", defaultAccent: "#2360c0", component: HackneyTemplate },
+  { id: "whitechapel", name: "Whitechapel", tagline: "Warm cream Playfair with brown contact strip, pill summary.", defaultAccent: "#4a2f1e", component: WhitechapelTemplate },
+  { id: "wandsworth", name: "Wandsworth", tagline: "Split navy/white header, quote-block summary, 2-col body.", defaultAccent: "#46567a", component: WandsworthTemplate },
+  { id: "sutton", name: "Sutton", tagline: "Minimal Poppins, tracked name, hollow-circle timeline.", defaultAccent: "#2b2b2b", component: SuttonTemplate },
 ];
