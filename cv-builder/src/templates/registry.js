@@ -55,6 +55,9 @@ import HackneyTemplate from "./HackneyTemplate";
 import WhitechapelTemplate from "./WhitechapelTemplate";
 import WandsworthTemplate from "./WandsworthTemplate";
 import SuttonTemplate from "./SuttonTemplate";
+import LambethTemplate from "./LambethTemplate";
+import SouthwarkTemplate from "./SouthwarkTemplate";
+import TwickenhamTemplate from "./TwickenhamTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -114,4 +117,7 @@ export const TEMPLATES = [
   { id: "whitechapel", name: "Whitechapel", tagline: "Warm cream Playfair with brown contact strip, pill summary.", defaultAccent: "#4a2f1e", component: WhitechapelTemplate },
   { id: "wandsworth", name: "Wandsworth", tagline: "Split navy/white header, quote-block summary, 2-col body.", defaultAccent: "#46567a", component: WandsworthTemplate },
   { id: "sutton", name: "Sutton", tagline: "Minimal Poppins, tracked name, hollow-circle timeline.", defaultAccent: "#2b2b2b", component: SuttonTemplate },
+  { id: "lambeth", name: "Lambeth", tagline: "Cream header band, dark icon contacts, timeline main.", defaultAccent: "#2d2d2d", component: LambethTemplate },
+  { id: "southwark", name: "Southwark", tagline: "Purple accent with inset lilac sidebar and stacked name.", defaultAccent: "#6c63b5", component: SouthwarkTemplate },
+  { id: "twickenham", name: "Twickenham", tagline: "Sage-green Lato sidebar, minimal main with hairline rules.", defaultAccent: "#7a8a70", component: TwickenhamTemplate },
 ];
