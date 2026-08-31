@@ -58,6 +58,9 @@ import SuttonTemplate from "./SuttonTemplate";
 import LambethTemplate from "./LambethTemplate";
 import SouthwarkTemplate from "./SouthwarkTemplate";
 import TwickenhamTemplate from "./TwickenhamTemplate";
+import CotswoldTemplate from "./CotswoldTemplate";
+import BloomsburyTemplate from "./BloomsburyTemplate";
+import HolbornTemplate from "./HolbornTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -120,4 +123,7 @@ export const TEMPLATES = [
   { id: "lambeth", name: "Lambeth", tagline: "Cream header band, dark icon contacts, timeline main.", defaultAccent: "#2d2d2d", component: LambethTemplate },
   { id: "southwark", name: "Southwark", tagline: "Purple accent with inset lilac sidebar and stacked name.", defaultAccent: "#6c63b5", component: SouthwarkTemplate },
   { id: "twickenham", name: "Twickenham", tagline: "Sage-green Lato sidebar, minimal main with hairline rules.", defaultAccent: "#7a8a70", component: TwickenhamTemplate },
+  { id: "cotswold", name: "Cotswold", tagline: "Gold header, dark subtitle band, lavender footer.", defaultAccent: "#c3b063", component: CotswoldTemplate },
+  { id: "bloomsbury", name: "Bloomsbury", tagline: "Minimal Arimo with purple accent, left-labeled rows.", defaultAccent: "#8b5cf6", component: BloomsburyTemplate },
+  { id: "holborn", name: "Holborn", tagline: "EB Garamond serif, cream top strip, classical 2-col.", defaultAccent: "#3a3a3a", component: HolbornTemplate },
 ];
