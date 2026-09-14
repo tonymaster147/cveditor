@@ -61,6 +61,9 @@ import TwickenhamTemplate from "./TwickenhamTemplate";
 import CotswoldTemplate from "./CotswoldTemplate";
 import BloomsburyTemplate from "./BloomsburyTemplate";
 import HolbornTemplate from "./HolbornTemplate";
+import EnfieldTemplate from "./EnfieldTemplate";
+import KingstonTemplate from "./KingstonTemplate";
+import HarrowTemplate from "./HarrowTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -126,4 +129,7 @@ export const TEMPLATES = [
   { id: "cotswold", name: "Cotswold", tagline: "Gold header, dark subtitle band, lavender footer.", defaultAccent: "#c3b063", component: CotswoldTemplate },
   { id: "bloomsbury", name: "Bloomsbury", tagline: "Minimal Arimo with purple accent, left-labeled rows.", defaultAccent: "#8b5cf6", component: BloomsburyTemplate },
   { id: "holborn", name: "Holborn", tagline: "EB Garamond serif, cream top strip, classical 2-col.", defaultAccent: "#3a3a3a", component: HolbornTemplate },
+  { id: "enfield", name: "Enfield", tagline: "Playfair name, dark sidebar with gradient bars and skill meters.", defaultAccent: "#494a4c", component: EnfieldTemplate },
+  { id: "kingston", name: "Kingston", tagline: "Peach/grey split page, white card, timeline dots on experience.", defaultAccent: "#4a4a4a", component: KingstonTemplate },
+  { id: "harrow", name: "Harrow", tagline: "Blue L-shape header with diamond bullet section titles.", defaultAccent: "#1c22b6", component: HarrowTemplate },
 ];
