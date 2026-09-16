@@ -64,6 +64,12 @@ import HolbornTemplate from "./HolbornTemplate";
 import EnfieldTemplate from "./EnfieldTemplate";
 import KingstonTemplate from "./KingstonTemplate";
 import HarrowTemplate from "./HarrowTemplate";
+import PinnerTemplate from "./PinnerTemplate";
+import BexleyTemplate from "./BexleyTemplate";
+import IlfordTemplate from "./IlfordTemplate";
+import HammersmithTemplate from "./HammersmithTemplate";
+import UxbridgeTemplate from "./UxbridgeTemplate";
+import CroydonTemplate from "./CroydonTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -132,4 +138,10 @@ export const TEMPLATES = [
   { id: "enfield", name: "Enfield", tagline: "Playfair name, dark sidebar with gradient bars and skill meters.", defaultAccent: "#494a4c", component: EnfieldTemplate },
   { id: "kingston", name: "Kingston", tagline: "Peach/grey split page, white card, timeline dots on experience.", defaultAccent: "#4a4a4a", component: KingstonTemplate },
   { id: "harrow", name: "Harrow", tagline: "Blue L-shape header with diamond bullet section titles.", defaultAccent: "#1c22b6", component: HarrowTemplate },
+  { id: "pinner", name: "Pinner", tagline: "Dusty-purple pill headings with decorative rounded shapes.", defaultAccent: "#6b6a9c", component: PinnerTemplate },
+  { id: "bexley", name: "Bexley", tagline: "Archivo Black centered name, rule-divided business minimal.", defaultAccent: "#1a1a1a", component: BexleyTemplate },
+  { id: "ilford", name: "Ilford", tagline: "Full-page bordered frame, icon-circle contacts, 2-col body.", defaultAccent: "#222222", component: IlfordTemplate },
+  { id: "hammersmith", name: "Hammersmith", tagline: "Grey rounded cards, timeline dates, tan language bars.", defaultAccent: "#2b2b2b", component: HammersmithTemplate },
+  { id: "uxbridge", name: "Uxbridge", tagline: "Brown pill header, cream sidebar, Cormorant serif titles.", defaultAccent: "#8a7060", component: UxbridgeTemplate },
+  { id: "croydon", name: "Croydon", tagline: "Navy accents with layered grey card sidebar and stripe.", defaultAccent: "#12468f", component: CroydonTemplate },
 ];
