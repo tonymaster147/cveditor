@@ -70,6 +70,9 @@ import IlfordTemplate from "./IlfordTemplate";
 import HammersmithTemplate from "./HammersmithTemplate";
 import UxbridgeTemplate from "./UxbridgeTemplate";
 import CroydonTemplate from "./CroydonTemplate";
+import BarnetTemplate from "./BarnetTemplate";
+import LewishamTemplate from "./LewishamTemplate";
+import BromleyTemplate from "./BromleyTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -144,4 +147,7 @@ export const TEMPLATES = [
   { id: "hammersmith", name: "Hammersmith", tagline: "Grey rounded cards, timeline dates, tan language bars.", defaultAccent: "#2b2b2b", component: HammersmithTemplate },
   { id: "uxbridge", name: "Uxbridge", tagline: "Brown pill header, cream sidebar, Cormorant serif titles.", defaultAccent: "#8a7060", component: UxbridgeTemplate },
   { id: "croydon", name: "Croydon", tagline: "Navy accents with layered grey card sidebar and stripe.", defaultAccent: "#12468f", component: CroydonTemplate },
+  { id: "barnet", name: "Barnet", tagline: "Brown/navy angled header, beige sidebar, timeline main column.", defaultAccent: "#8a6a47", component: BarnetTemplate },
+  { id: "lewisham", name: "Lewisham", tagline: "Grey centered name card, hairline-divided clean 2-column body.", defaultAccent: "#1a1a1a", component: LewishamTemplate },
+  { id: "bromley", name: "Bromley", tagline: "Indigo pill headings with decorative shapes and central timeline.", defaultAccent: "#5f5c86", component: BromleyTemplate },
 ];
