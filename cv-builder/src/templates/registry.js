@@ -73,6 +73,9 @@ import CroydonTemplate from "./CroydonTemplate";
 import BarnetTemplate from "./BarnetTemplate";
 import LewishamTemplate from "./LewishamTemplate";
 import BromleyTemplate from "./BromleyTemplate";
+import HounslowTemplate from "./HounslowTemplate";
+import MertonTemplate from "./MertonTemplate";
+import RedbridgeTemplate from "./RedbridgeTemplate";
 
 export const TEMPLATES = [
   { id: "photo-sidebar", name: "Photo Sidebar", tagline: "Round photo on dark sidebar.", defaultAccent: "#10b981", component: PhotoSidebarTemplate, hasPhoto: true },
@@ -150,4 +153,7 @@ export const TEMPLATES = [
   { id: "barnet", name: "Barnet", tagline: "Brown/navy angled header, beige sidebar, timeline main column.", defaultAccent: "#8a6a47", component: BarnetTemplate },
   { id: "lewisham", name: "Lewisham", tagline: "Grey centered name card, hairline-divided clean 2-column body.", defaultAccent: "#1a1a1a", component: LewishamTemplate },
   { id: "bromley", name: "Bromley", tagline: "Indigo pill headings with decorative shapes and central timeline.", defaultAccent: "#5f5c86", component: BromleyTemplate },
+  { id: "hounslow", name: "Hounslow", tagline: "Navy sidebar, huge two-line name, blue chevrons and geometric accents.", defaultAccent: "#0a1f44", component: HounslowTemplate },
+  { id: "merton", name: "Merton", tagline: "Plum header banner, lilac sidebar, icon-tile rail sections.", defaultAccent: "#5d2a44", component: MertonTemplate },
+  { id: "redbridge", name: "Redbridge", tagline: "Peach & grey frame around a white card, dot-rail timelines.", defaultAccent: "#4a4a4a", component: RedbridgeTemplate },
 ];
